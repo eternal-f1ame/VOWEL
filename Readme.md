@@ -1,6 +1,6 @@
 # Vision-Based Gesture-Controlled Drive
 
-# Input Origination
+## Input Origination
 
 Task one of using hand gestures as controls was taking the inputs ( hand-gestures ) in a proper manner wherein it can be further converted into executable commmands for the robot.
 
@@ -34,14 +34,14 @@ The thresholded black and whote image along with the original frames captured we
 
 The created directory of images ( resized images (128x128) and (256x256) ) done to simply because of my limited computational resources, was further made into a dataset of pixel values (as features ) where the labels were the categories of the hand gestures( aforementioned ).
 
-   
-
 ![Screenshot from 2022-02-17 13-06-38.png](Vision-Bas%207ea3a/Screenshot_from_2022-02-17_13-06-38.png)
 
-For starters a simple CNN architecture was trained on this data and validation/test accuracy of about 70 % was recieved, furthermore after training some sophisticated architectures like resnet50v2 and InceptionNet I found in both the cases the accuracy if the model was capped at 80%, hence deducing that the dataset we have is not good enough, 
+For starters a simple CNN architecture was trained on this data and validation/test accuracy of about 70 % was recieved, furthermore after training some sophisticated architectures like resnet50v2 and InceptionNet I found in both the cases the accuracy if the model was capped at 80%, hence deducing that the dataset we have is not good enough.
 
 - It does not have too many training samples
+
 - It has hand-gestures only from one person( me )
+
 - To make it workable on available computational resources the quality of images were reduced which are also a cause of limiting the versatility of the data.
 
 Nonetheless the model was trained and the weights were saved:-  
@@ -50,7 +50,7 @@ Nonetheless the model was trained and the weights were saved:-
 
 ![Screenshot from 2022-02-17 13-18-40.png](Vision-Bas%207ea3a/Screenshot_from_2022-02-17_13-18-40.png)
 
-# Output Generation:-
+## Output Generation:-
 
 ### `Video()` function
 
@@ -66,7 +66,7 @@ After the video function facilitates the thresholded black and white hand contou
 
 `video()` function contains a dictionary that has keys corresponding to the outputs from the saved ml model the key value pairs in the same dictionary are label and its executable command respectively().
 
-# Gesture-Controlled Bot
+## Gesture-Controlled Bot
 
 ### Driving the Robot
 
@@ -76,18 +76,18 @@ The executable command which is obtained from the `Video()` function is used to 
 
 The Gesture Following Bot is made using the combination of ROS, Gazebo, and AI.
 
-It integrates all the different features of a robot and builds a connection between them through the concept of nodes and messages. The gazebo is the most widely used robotics simulation platform. On Gazebo it is possible to test algorithms, design robots and check their working in various physical conditions. 
+It integrates all the different features of a robot and builds a connection between them through the concept of nodes and messages. The gazebo is the most widely used robotics simulation platform. On Gazebo it is possible to test algorithms, design robots and check their working in various physical conditions.
 It uses urdf file format to define the robots in the simulation.
 
 ![Screenshot from 2022-02-17 13-53-51.png](Vision-Bas%207ea3a/Screenshot_from_2022-02-17_13-53-51.png)
 
 ### Features and Parts
 
-The gesture following bot has 1 base link to which other components are attached, 4 wheels, 1 rod to which a rotating cylinder is attached. These are the basic components of the robot and the total mass of the robot is 4.5 kg. 
+The gesture following bot has 1 base link to which other components are attached, 4 wheels, 1 rod to which a rotating cylinder is attached. These are the basic components of the robot and the total mass of the robot is 4.5 kg.
 
-The wheels are controlled using ROS controllers like differential drive controllers, especially for wheels. Through these controllers, the angular velocities and linear velocities of each wheel can be controlled for smooth movements of the robot. 
+The wheels are controlled using ROS controllers like differential drive controllers, especially for wheels. Through these controllers, the angular velocities and linear velocities of each wheel can be controlled for smooth movements of the robot.
 
-These controllers are stored in the config folder in Yaml file format. Using Ros and gazebo various sensors like cameras and lidars can be easily attached to the robot. In this gesture following bot there are two sensors attached to the robot one is the camera which is attached on the top cylinder to detect obstacles and objects. 
+These controllers are stored in the config folder in Yaml file format. Using Ros and gazebo various sensors like cameras and lidars can be easily attached to the robot. In this gesture following bot there are two sensors attached to the robot one is the camera which is attached on the top cylinder to detect obstacles and objects.
 
 ![Screenshot from 2022-02-17 13-55-33.png](Vision-Bas%207ea3a/Screenshot_from_2022-02-17_13-55-33.png)
 
