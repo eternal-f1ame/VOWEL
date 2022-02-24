@@ -1,0 +1,60 @@
+<?xml version="1.0" ?>
+
+<sdf version="1.5">
+	<world name="default">
+		<!-- A global light source -->
+		<include>
+			<uri>model://sun</uri>
+		</include>
+
+		<!-- A ground plane -->
+		<include>
+			<uri>model://ground_plane</uri>
+		</include>
+        
+  <model name="lagori base">
+    <static>true</static>
+    <link name="link">
+      <pose>0.5 0.5 0.0 0 0 0</pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.5 0.5 0.7</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <box>
+            <size>0.5 0.5 0.7</size>
+          </box>
+        </geometry>
+        <material> 
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>0 0 0 0</specular>
+          <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+  	</model>
+	<!-- <model name='sofa'>
+	<static>true</static>
+	<link name="link">
+	<pose>0 0 0.14 0 0 0</pose>
+	<collision name="collision">
+        <geometry>
+          <uri>model://sofa/meshes/Sofa.STL</uri>
+        </geometry>
+	</collision>
+	<visual name="visual">
+		<cast_shadows>false</cast_shadows>
+  		<geometry>
+    		<uri>model://sofa/meshes/Sofa.STL</uri>
+  		</geometry>
+	</visual>
+	</link>
+	</model> -->
+</world>
+</sdf>
