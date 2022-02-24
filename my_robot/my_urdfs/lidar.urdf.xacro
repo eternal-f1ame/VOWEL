@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="lazDar">
+  <xacro:property name="base_radius" value="0.05"/>
+  <xacro:property name="base_height" value="0.05"/>
+  <xacro:property name="laz_radius" value="0.04"/>
+  <xacro:property name="laz_height" value="0.1"/>
+
+  <gazebo reference="laz_base">
+    <material>Gazebo/Grey</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+  </gazebo>
+
+  <link name="laz_base">
+    <visual>
+      <geometry>
+        <cylinder length="${base_height}" radius="${base_radius}"/>
+      </geometry>
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder length="${base_height}" radius="${base_radius}"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="${(1/12) * 0.1 * (3 * base_radius * base_radius + base_height * base_height)}" ixy="0" ixz="0" iyy="${(1/12) * 0.1 * (3 * base_radius * base_radius + base_height * base_height)}" iyz="0" izz="${(1/2) * 0.1 * base_radius * base_radius}"/>
+    </inertial>
+  </link>
+
+  <gazebo reference="laz_rot">
+    <material>Gazebo/RedGlow</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <sensor type="ray" name="laz">
+       <always_on>true</always_on>
+       <pose>${laz_radius} 0 ${laz_height/4} 0 0 0</pose>
+       <visualize>true</visualize>
+       <update_rate>30</update_rate>
+       <ray>
+         <scan>
+           <horizontal>
+             <samples>15</samples>
+             <resolution>1</resolution>
+             <min_angle>-${pi}</min_angle>
+             <max_angle>${pi}</max_angle>
+           </horizontal>  
+           <vertical>
+             <samples>1</samples>
+             <resolution>1</resolution>
+             <min_angle>0.01</min_angle>
+             <max_angle>0.1</max_angle>
+           </vertical>
+         </scan>
+          <range>
+           <min>0.05</min>
+           <max>15</max>
+           <resolution>0.02</resolution>
+         </range>
+      </ray>
+      
+   </sensor>
+  </gazebo>
+
+  
+  <link name="laz_rot">
+    <visual>
+      <geometry>
+        <cylinder length="${laz_height}" radius="${laz_radius}"/>
+      </geometry>
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder length="${laz_height}" radius="${laz_radius}"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="${(1/12) * 0.1 * (3 * laz_radius * laz_radius + laz_height * laz_height)}" ixy="0" ixz="0" iyy="${(1/12) * 0.1 * (3 * laz_radius * laz_radius + laz_height * laz_height)}" iyz="0" izz="${(1/2) * 0.1 * laz_radius * laz_radius}"/>
+    </inertial>
+  </link>
+
+  <joint name="lazRot" type="continuous">
+    <parent link="laz_base"/>
+    <child link="laz_rot"/>
+    <axis xyz="0 0 1"/>
+    <origin xyz = "0 0 ${base_height/2}"/>
+    <dynamics friction="0.1"/>
+  </joint>
+  <transmission name="lazer_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor2">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="lazRot">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+</transmission> 
+</robot>

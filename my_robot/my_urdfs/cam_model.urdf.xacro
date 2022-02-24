@@ -1,0 +1,343 @@
+<?xml version="1.0"?>
+<robot name="macroed" xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:property name="length" value='0.45' />
+<xacro:property name="width"  value='0.4' />
+<xacro:property name='height' value='0.17' />
+<xacro:property name="wheel_radius" value='0.05' />
+<xacro:property name="wheel_width" value='0.03' />
+<xacro:property name="sheet_length" value='0.07' />
+<xacro:property name="sheet_width" value='0.07' />
+<xacro:property name="sheet_height" value='0.01' />
+<xacro:property name="c_radius" value='0.01'/>
+<xacro:property name="c_height" value='0.05'/>
+<xacro:property name="cylin_radius" value='0.07' />
+<xacro:property name="cylin_height" value='0.04' />
+<xacro:property name="rod_radius" value='0.018' />
+<xacro:property name="rod_length" value='0.3'/>
+<xacro:property name="camera_dim" value="0.01"/>
+<xacro:property name="pi" value="3.1428"/>
+<xacro:property name="laz_radius" value="0.04"/>
+<xacro:property name="laz_height" value="0.1"/>
+
+
+
+
+<material name="blue">
+    <color rgba="0.1 0.0 0.9 1"/>
+</material>
+<material name="grey">
+    <color rgba="0.191 0.191 0.191 1"/>
+</material>
+
+<xacro:macro name="default_inertial" params="mass">
+    <inertial>
+      <mass value="${mass}" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+    </inertial>
+  </xacro:macro>
+
+<link name="base_link">
+    <visual>
+        <geometry>
+           <box size="${length} ${width} ${height}"/>
+        </geometry>
+        <material name='blue'/> 
+    </visual>
+    <collision>
+        <geometry>
+            <box size= "${length} ${width} ${height}"/>
+        </geometry>
+    </collision>
+    <inertial>
+        <mass value="5"/>
+       <inertia ixx="0.07871" ixy="0" ixz="0" iyy="0.09642" iyz="0.0" izz="0.1510"/>
+    </inertial>
+</link>
+
+<xacro:macro name="sheets" params="prefix suffix reflectx reflecty">
+    <link name="${prefix}_${suffix}_sheet">
+        <visual>
+            <geometry>
+                <box size="${sheet_length} ${sheet_width} ${sheet_height}"/>
+            </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${sheet_length} ${sheet_width} ${sheet_height}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.01"/>
+            <inertia ixx="0.000004167" ixy="0.0" ixz="0.0" iyy="0.000004167" iyz="0.0" izz="0.000008167"/>
+        </inertial>
+        
+    </link>
+    <joint name="${prefix}_${suffix}_sheet_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="${prefix}_${suffix}_sheet"/>
+        <origin xyz="${(length-sheet_length)*0.5*reflectx} ${(width-sheet_width)*0.5*reflecty} -0.085" rpy="0.0 0.0 0.0"/>
+    </joint>
+
+    <link name="${prefix}_${suffix}_scylinder">
+        <visual>
+            <geometry>
+                <cylinder radius="${c_radius}" length="${c_height}"/>
+            </geometry>
+        </visual>
+        <collision>
+                <geometry>
+                    <cylinder radius="${c_radius}" length="${c_height}"/>
+                </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.01"/>
+           <inertia ixx="0.0000023333" ixy="0.0" ixz="0.0" iyy="0.0000023333" iyz="0.0" izz="0.0000005"/>
+        </inertial>
+    </link>
+    <joint name="${prefix}_${suffix}_sheet_cylinder" type="fixed">
+        <parent link="${prefix}_${suffix}_sheet"/>
+        <child link="${prefix}_${suffix}_scylinder"/>
+    </joint>
+
+    <link name="${prefix}_${suffix}_wheel">
+        <visual>
+            <geometry>
+                <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+            </geometry>
+        </visual>
+        <collision>
+                <geometry>
+                    <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+                </geometry>
+        </collision>
+        <inertial>
+            <mass value="1"/>
+           <inertia ixx="0.0007" ixy="0.0" ixz="0.0" iyy="0.0007" iyz="0.0" izz="0.00125"/>
+        </inertial>
+    </link>
+    <joint name="${prefix}_${suffix}_scylinder_wheel" type="continuous">
+        <axis xyz="0 0.0 1.0"/>
+        <parent link="${prefix}_${suffix}_scylinder"/>
+        <child link="${prefix}_${suffix}_wheel"/>
+        <origin xyz="0.0 0.0 -0.07" rpy="-1.57 0.0 0.0"/>
+    </joint>
+    <gazebo reference="${prefix}_${suffix}_wheel">
+      <mu1 value="200.0"/>
+      <mu2 value="100.0"/>
+      <kp value="10000000.0" />
+      <kd value="1.0" />
+      <material>Gazebo/Grey</material>
+    </gazebo>
+    <transmission name="${prefix}_${suffix}_wheel_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="${prefix}_${suffix}_wheel_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+      <joint name="${prefix}_${suffix}_scylinder_wheel">
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
+</xacro:macro>
+<xacro:sheets prefix="left" suffix="front" reflectx="1" reflecty="-1" />
+<xacro:sheets prefix="left" suffix="back" reflectx="-1" reflecty="-1"/>
+ <xacro:sheets prefix="right" suffix="back" reflectx="-1" reflecty="1" />
+<xacro:sheets prefix="right" suffix="front" reflectx="1" reflecty="1" />  
+
+<link name="rod">
+<visual>
+<geometry>
+    <cylinder radius="${rod_radius}" length="${rod_length}"/>
+</geometry>
+<origin xyz="0.0 0.0 0.17"/>
+</visual>
+<collision>
+    <geometry>
+    <cylinder radius="${rod_radius}" length="${rod_length}"/>
+    </geometry>
+</collision>
+<inertial>
+    <mass value="1.75"/>
+   <inertia ixx="0.007581" ixy="0.0" ixz="0.0" iyy="0.007581" iyz="0.0" izz="0.000162"/>
+</inertial>
+</link>
+
+<joint name="base_to_rod" type="fixed">
+    <parent link="base_link"/>
+    <child link="rod"/>
+</joint>
+
+<link name="cylin">
+    <visual>
+        <geometry>
+            <cylinder radius="${cylin_radius}" length="${cylin_height}"/>
+        </geometry>
+        <material name='grey'/>
+    </visual>
+    <collision>
+        <geometry>
+            <cylinder radius="${cylin_radius}" length="${cylin_height}"/>
+        </geometry>
+    </collision>
+  <inertial>
+      <mass value="0.65"/>
+     <inertia ixx="0.000883" ixy="0.0" ixz="0.0" iyy="0.000883" iyz="0.0" izz="0.0015925"/>
+  </inertial>
+</link>
+<joint name="rod_cylin" type="continuous">
+    <axis xyz="0.0 0.0 1"/>
+    <parent link="rod"/>
+    <child link="cylin"/>
+    <origin xyz="0.0 0.0 0.32"/>
+</joint>
+
+<transmission name="cylin_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor1">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="rod_cylin">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+</transmission> 
+
+<link name="camera_link">
+    <visual>
+        <geometry>
+            <box size="${camera_dim} ${camera_dim} ${camera_dim}"/>
+        </geometry>
+    </visual>
+    <collision>
+        <geometry>
+            <box size="${camera_dim} ${camera_dim} ${camera_dim}"/>
+        </geometry>
+    </collision> 
+    <inertial>
+        <mass value="0.2"/>
+       <inertia ixx="0.0000033333" ixy="0.0" ixz="0.0" iyy="0.0000033333" iyz="0.0" izz="0.0000033333"/>
+    </inertial>   
+</link>
+<joint name="camera_joint" type="fixed">
+    <axis xyz="1.0 0.0 0.0"/>
+    <parent link="cylin"/>
+    <child link="camera_link"/>
+    <origin xyz="0.075 0.0 0.02"/>  
+</joint>
+<gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/</robotNamespace>
+    </plugin>
+</gazebo>
+<gazebo reference="camera_link">
+    <sensor type="camera" name="camera1">
+      <update_rate>30.0</update_rate>
+      <camera name="head">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>800</width>
+          <height>800</height>
+          <format>R8G8B8</format>
+        </image>
+        <!-- <save enabled='true'>
+            <path>/home/fierce/turtlebot_photos</path>
+        </save> -->
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>macroed/camera1</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+
+<!-- <xacro:include filename="$(find my_robot)/my_urdfs/lidar.urdf.xacro"/>
+  <joint name="lidarGlue" type="fixed">
+    <parent link="base_link"/>
+    <child link="laz_base"/>
+    <origin xyz="${width/4} 0 ${height/2}"/>
+  </joint> -->
+
+  <joint name="hokuyo_joint" type="fixed">
+    <axis xyz="0 0 1" />
+    <origin xyz="0.12 0 0.13" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="hokuyo_link"/>
+  </joint>
+
+  <!-- Hokuyo Laser -->
+  <link name="hokuyo_link">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+    <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </visual>
+
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+  <gazebo reference="hokuyo_link">
+    <sensor type="gpu_ray" name="head_hokuyo_sensor">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>40</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>720</samples>
+            <resolution>1</resolution>
+            <min_angle>-1.570796</min_angle>
+            <max_angle>1.570796</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.10</min>
+          <max>10.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise parameters based on published spec for Hokuyo laser
+               achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+               stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+               reading. -->
+          <mean>0.05</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
+        <topicName>/macroed/laser/scan</topicName>
+        <frameName>hokuyo_link</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+</robot>

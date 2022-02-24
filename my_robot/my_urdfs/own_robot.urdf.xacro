@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<robot name="macroed" xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:property name="length" value='0.45' />
+<xacro:property name="width"  value='0.4' />
+<xacro:property name='height' value='0.17' />
+<xacro:property name="wheel_radius" value='0.05' />
+<xacro:property name="wheel_width" value='0.03' />
+<xacro:property name="sheet_length" value='0.07' />
+<xacro:property name="sheet_width" value='0.07' />
+<xacro:property name="sheet_height" value='0.01' />
+<xacro:property name="c_radius" value='0.01'/>
+<xacro:property name="c_height" value='0.05'/>
+<xacro:property name="cylin_radius" value='0.07' />
+<xacro:property name="cylin_height" value='0.04' />
+<xacro:property name="rod_radius" value='0.018' />
+<xacro:property name="rod_length" value='0.5'/>
+
+
+<material name="blue">
+    <color rgba="0.1 0.0 0.9 1"/>
+</material>
+<material name="grey">
+    <color rgba="0.191 0.191 0.191 1"/>
+</material>
+
+<xacro:macro name="default_inertial" params="mass">
+    <inertial>
+      <mass value="${mass}" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+    </inertial>
+  </xacro:macro>
+
+<link name="base_link">
+    <visual>
+        <geometry>
+           <box size="${length} ${width} ${height}"/>
+        </geometry>
+        <material name='blue'/> 
+    </visual>
+    <collision>
+        <geometry>
+            <box size= "${length} ${width} ${height}"/>
+        </geometry>
+    </collision>
+    <xacro:default_inertial mass="10"/>
+</link>
+
+<xacro:macro name="sheets" params="prefix suffix reflectx reflecty">
+    <link name="${prefix}_${suffix}_sheet">
+        <visual>
+            <geometry>
+                <box size="${sheet_length} ${sheet_width} ${sheet_height}"/>
+            </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${sheet_length} ${sheet_width} ${sheet_height}"/>
+            </geometry>
+        </collision>
+        <xacro:default_inertial mass="0.01"/>
+    </link>
+    <joint name="${prefix}_${suffix}_sheet_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="${prefix}_${suffix}_sheet"/>
+        <origin xyz="${(length-sheet_length)*0.5*reflectx} ${(width-sheet_width)*0.5*reflecty} -0.085" rpy="0.0 0.0 0.0"/>
+    </joint>
+
+    <link name="${prefix}_${suffix}_scylinder">
+        <visual>
+            <geometry>
+                <cylinder radius="${c_radius}" length="${c_height}"/>
+            </geometry>
+        </visual>
+        <collision>
+                <geometry>
+                    <cylinder radius="${c_radius}" length="${c_height}"/>
+                </geometry>
+        </collision>
+        <xacro:default_inertial mass="0.1"/>
+    </link>
+    <joint name="${prefix}_${suffix}_sheet_cylinder" type="fixed">
+        <parent link="${prefix}_${suffix}_sheet"/>
+        <child link="${prefix}_${suffix}_scylinder"/>
+    </joint>
+
+    <link name="${prefix}_${suffix}_wheel">
+        <visual>
+            <geometry>
+                <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+            </geometry>
+        </visual>
+        <collision>
+                <geometry>
+                    <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+                </geometry>
+        </collision>
+        <xacro:default_inertial mass="1"/>
+    </link>
+    <joint name="${prefix}_${suffix}_scylinder_wheel" type="continuous">
+        <axis xyz="0 0.0 1.0"/>
+        <parent link="${prefix}_${suffix}_scylinder"/>
+        <child link="${prefix}_${suffix}_wheel"/>
+        <origin xyz="0.0 0.0 -0.07" rpy="1.57 0.0 0.0"/>
+    </joint>
+</xacro:macro>
+<xacro:sheets prefix="right" suffix="front" reflectx="1" reflecty="-1" />
+<xacro:sheets prefix="right" suffix="back" reflectx="-1" reflecty="-1"/>
+<xacro:sheets prefix="left" suffix="back" reflectx="-1" reflecty="1" />
+<xacro:sheets prefix="left" suffix="front" reflectx="1" reflecty="1" />
+
+<link name="rod">
+<visual>
+<geometry>
+    <cylinder radius="${rod_radius}" length="${rod_length}"/>
+</geometry>
+<origin xyz="0.0 0.0 0.17"/>
+</visual>
+<collision>
+    <geometry>
+    <cylinder radius="${rod_radius}" length="${rod_length}"/>
+    </geometry>
+</collision>
+<xacro:default_inertial mass="3"/>
+</link>
+
+<joint name="base_to_rod" type="fixed">
+    <parent link="base_link"/>
+    <child link="rod"/>
+</joint>
+
+<link name="cylin">
+    <visual>
+        <geometry>
+            <cylinder radius="${cylin_radius}" length="${cylin_height}"/>
+        </geometry>
+        <material name='grey'/>
+    </visual>
+    <collision>
+        <geometry>
+            <cylinder radius="${cylin_radius}" length="${cylin_height}"/>
+        </geometry>
+    </collision>
+  <xacro:default_inertial mass="4"/>  
+</link>
+<joint name="rod_cylin" type="continuous">
+    <axis xyz="0.0 0.0 1"/>
+    <parent link="rod"/>
+    <child link="cylin"/>
+    <origin xyz="0.0 0.0 0.42"/>
+</joint>
+</robot>
