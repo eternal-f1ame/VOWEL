@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="ballrack">
+    <static>true</static>
+    <link name="link">
+      <pose>0 0 1.4 0 0 0</pose>
+      <collision name="collision">
+        <geometry>
+          <uri>model://sofa/meshes/Sofa.STL</uri>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <uri>model://sofa/meshes/Sofa.STL</uri>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>
