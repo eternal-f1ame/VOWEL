@@ -1,0 +1,20 @@
+<launch>
+  <arg name="model" default="$(find my_robot)/my_urdfs/publish_robot.urdf.xacro"/>
+
+
+  <include file="$(find my_robot)/my_launch/01_launch.launch">
+    <arg name="model" value="$(arg model)" />
+  </include>
+
+  <rosparam command="load"
+            file="$(find my_robot)/my_config/joints.yaml"
+            ns="rover_joint_state_controller" />
+  <rosparam command="load"
+            file="$(find my_robot)/my_config/cylins.yaml"
+            ns="rover_head_controller" />
+
+  <node name="rover_controller_spawner" pkg="controller_manager" type="spawner"
+    args="rover_joint_state_controller
+          rover_head_controller
+          --shutdown-timeout 3"/>
+</launch>
