@@ -134,4 +134,10 @@ pip install sklearn
 * Clone and Fetch the Gesture Recognition repository to the folder <code>/catkin_ws/src</code>
 
 * Delete the <code>cmakelists</code> and <code>package.xml</code> from the my_robot folder.
-* open the terminal and Navigate to <code>/catkin_ws/src</code> and then 
+* open the terminal and Navigate to <code>/catkin_ws/src</code> and then enter <code>catkin make "my_robot"</code>
+* To finally run the setup. Navigate to the <code>/catkin_ws/src</code> and then <code>roslaunch my_robot drive.launch</code>.
+
+* Open a text editor -> Navigate to <code>catkin_ws/src/my_robot/python_scripts/main.py</code>.
+* Connect the camera and run <code>main.py</code>.
+* The region Infront of the camera should have the working background present infront of it and no foreign object should enter the camera region until the message "you are good to go" is displayed in the Terminal.
+
