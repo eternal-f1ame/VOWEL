@@ -5,7 +5,7 @@ from run_avg import *
 from segment import *
 from global_vars import *
 
-if __name__ == "__main__":
+def video(X):
 
     aWeight = 0.1
 
@@ -85,6 +85,14 @@ if __name__ == "__main__":
 
                 res = predict(thresholded)
                 
+                if res == 'right'or res == 'left':
+
+                    X.left_right(res)
+
+                if res == 'front' or res == 'back':
+
+                    X.front_back(res)
+
                 cv2.putText(clone, str(int(fingers)), (70, 85), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
 
                 cv2.imshow("Thesholded", thresholded)
@@ -104,5 +112,4 @@ if __name__ == "__main__":
         if num_frames == 100000:
 
             break
-
 
