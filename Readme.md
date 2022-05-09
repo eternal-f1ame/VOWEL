@@ -96,3 +96,42 @@ These controllers are stored in the config folder in Yaml file format. Using Ros
 ### Extras
 
 Another sensor is a lidar sensor which can determine the distance of obstacles from the robot for any further operations.
+
+# 
+# Prerequisites
+### Operating System: Ubuntu Linux 20.04
+### Text Editor: Visual Studio Code Community Version
+## Language 
+* Python 3.8 or Python 3.9
+## Simulation Packages
+* Ros Noetoc
+<code>sudo apt install ros-noetic-desktop-full</code>
+* Gazebo 
+<code>sudo apt install gazebo</code>
+
+## Python Packages
+
+* Rospy<code>
+pip install rospy
+</code>
+
+* Tensorflow<code>
+pip install tensorflow=2.80
+</code>
+
+* OpenCV<code> 
+pip install opencv-python=4.5.5
+</code>
+
+* Sklearn<code>
+pip install sklearn
+</code>
+
+### ROS Installation
+* <a href="http://wiki.ros.org/noetic/Installation/Ubuntu">Installation</a>
+
+## Steps to Run the setup
+* Clone and Fetch the Gesture Recognition repository to the folder <code>/catkin_ws/src</code>
+
+* Delete the <code>cmakelists</code> and <code>package.xml</code> from the my_robot folder.
+* open the terminal and Navigate to <code>/catkin_ws/src</code> and then 
