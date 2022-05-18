@@ -26,21 +26,17 @@
 
 ## Python Packages
 
-* Rospy<code>
-pip install rospy
-</code>
+* Rospy
+<code>pip install rospy</code>
 
-* Tensorflow<code>
-pip install tensorflow=2.80
-</code>
+* Tensorflow
+<code>pip install tensorflow=2.80</code>
 
-* OpenCV<code>
-pip install opencv-python=4.5.5
-</code>
+* OpenCV
+<code>pip install opencv-python=4.5.5</code>
 
-* Sklearn<code>
-pip install sklearn
-</code>
+* Sklearn
+<code>pip install sklearn</code>
 
 ### ROS Installation
 
