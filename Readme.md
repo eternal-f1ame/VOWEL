@@ -55,9 +55,16 @@ catkin make my_robot
 ```
 * To finally run the setup. Navigate to the <code>/catkin_ws/src</code> and then
 ```
+source devel/setup.bash
 roslaunch my_robot drive.launch
 ```
 
-* Open a text editor -> Navigate to <code>catkin_ws/src/my_robot/python_scripts/main.py</code>.
-* Connect the camera and run <code>main.py</code>.
+* Open a terminal -> Navigate to <code>catkin_ws/src/my_robot/python_scripts/main.py</code>.
+* Make sure a camera is connected to the system
+* enter 
+```
+python3 main.py
+```
 * The region Infront of the camera should have the working background present infront of it and no foreign object should enter the camera region until the message "you are good to go" is displayed in the Terminal.
+
+* Roi is marked by a green bounding box, all the gestures made inside it will be taken as inuts.
