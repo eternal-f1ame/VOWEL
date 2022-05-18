@@ -42,7 +42,7 @@
 
 * <a href="http://wiki.ros.org/noetic/Installation/Ubuntu">ROS Installation</a>
 
-<h1> Steps to Run the setup</h1>
+### Steps to Run the setup
 
 * Clone and Fetch the Gesture Recognition repository to the folder <code>/catkin_ws/src</code>
 
@@ -68,3 +68,9 @@ python3 main.py
 * The region Infront of the camera should have the working background present infront of it and no foreign object should enter the camera region until the message "you are good to go" is displayed in the Terminal.
 
 * Roi is marked by a green bounding box, all the gestures made inside it will be taken as inuts.
+
+### Changing the Hyperparameters of the Robot
+
+#### Navigate to ```catkin_ws/src/my_robot/python_scripts/robot.py```
+
+#### Values of variables named SPEED, ANGULAR_SPEED, DIST, ANGLE cna be changed to change the respective selfexplanatory movements per prediction frame.
