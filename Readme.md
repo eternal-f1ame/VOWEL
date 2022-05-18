@@ -69,8 +69,8 @@ python3 main.py
 
 * Roi is marked by a green bounding box, all the gestures made inside it will be taken as inuts.
 
-### Changing the Hyperparameters of the Robot
+#### Changing the Hyperparameters of the Robot
 
-#### Navigate to ```catkin_ws/src/my_robot/python_scripts/robot.py```
+##### Navigate to ```catkin_ws/src/my_robot/python_scripts/robot.py```
 
-#### Values of variables named SPEED, ANGULAR_SPEED, DIST, ANGLE cna be changed to change the respective selfexplanatory movements per prediction frame.
+##### Values of variables named SPEED, ANGULAR_SPEED, DIST, ANGLE cna be changed to change the respective selfexplanatory movements per prediction frame.
