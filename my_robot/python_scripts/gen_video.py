@@ -1,11 +1,11 @@
 from utils import *
 from count_fingers import *
-from predict import *
+# from predict import *
 from run_avg import *
 from segment import *
-from global_vars import *
+# from global_vars import *
 
-def video(X):
+def gen_video():
 
     aWeight = 0.1
 
@@ -15,19 +15,13 @@ def video(X):
 
     top, right, bottom, left = 10, 350, 225, 590
 
-    prevfin = 0
-
     fingers = 0
 
     num_frames = 0
 
-    fr = 0
-
     num = 1
 
-    finger_disp = 0
-
-    fingerC = 0
+    i = 1
 
     while(True):
 
@@ -68,38 +62,15 @@ def video(X):
                 
                 (thresholded, segmented) = hand
 
+                res,_ = count(thresholded, segmented)
+
                 cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
-                
-                fingers,chull = count(thresholded,segmented)      
 
-                if num % 10 == 0:
-
-                    finger_disp = fingerC
-
-                    fingerC = 0
-
-                else:
-                    fingerC += fingers
-
-                    num += 1
-
-                res = predict(thresholded)
-                
-                if res == 'right'or res == 'left':
-
-                    X.left_right(res)
-
-                if res == 'front' or res == 'back':
-
-                    X.front_back(res)
-
-                cv2.putText(clone, str(int(fingers)), (70, 85), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+                cv2.putText(clone, res, (70, 85), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
 
                 cv2.imshow("Thesholded", thresholded)
                 
-                cv2.putText(clone,res, (70, 35), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
-                
-        prevfin = fingers
+                num += 1
 
         cv2.rectangle(clone, (left, top), (right, bottom), (0,255,0), 2)
         
@@ -113,3 +84,4 @@ def video(X):
 
             break
 
+gen_video()
