@@ -62,11 +62,11 @@ def gen_video():
                 
                 (thresholded, segmented) = hand
 
-                res,_ = count(thresholded, segmented)
+                # res,_ = pred(thresholded, segmented)
 
                 cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
 
-                cv2.putText(clone, res, (70, 85), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+                # cv2.putText(clone, res, (70, 85), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
 
                 cv2.imshow("Thesholded", thresholded)
                 

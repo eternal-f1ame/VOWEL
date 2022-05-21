@@ -129,18 +129,18 @@ file(INSTALL DESTINATION "/usr/local" TYPE FILE FILES "/home/dark/Documents/GitH
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/dark/Documents/GitHub/Gesture-Recognition/build/catkin_generated/installspace/control.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/dark/Documents/GitHub/Gesture-Recognition/build/catkin_generated/installspace/my_robot.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/control/cmake" TYPE FILE FILES
-    "/home/dark/Documents/GitHub/Gesture-Recognition/build/catkin_generated/installspace/controlConfig.cmake"
-    "/home/dark/Documents/GitHub/Gesture-Recognition/build/catkin_generated/installspace/controlConfig-version.cmake"
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/my_robot/cmake" TYPE FILE FILES
+    "/home/dark/Documents/GitHub/Gesture-Recognition/build/catkin_generated/installspace/my_robotConfig.cmake"
+    "/home/dark/Documents/GitHub/Gesture-Recognition/build/catkin_generated/installspace/my_robotConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/control" TYPE FILE FILES "/home/dark/Documents/GitHub/Gesture-Recognition/my_robot/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/my_robot" TYPE FILE FILES "/home/dark/Documents/GitHub/Gesture-Recognition/my_robot/package.xml")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)

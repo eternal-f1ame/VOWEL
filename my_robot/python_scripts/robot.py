@@ -1,9 +1,6 @@
 from utils import *
 # !/usr/bin/env python
-SPEED = 1
-DIST = 0.01
-ANGULAR_SPEED = 45
-ANGLE = 3
+
 class Turtle_cleaner():
 
     def __init__(self):
@@ -18,9 +15,9 @@ class Turtle_cleaner():
 
     def front_back(self,res):
         
-        speed=SPEED
+        speed=1
         
-        dist=DIST
+        dist=0.01
         
         if res=='front':
         
@@ -73,9 +70,9 @@ class Turtle_cleaner():
         
         dir=res
         
-        angular_speed=ANGULAR_SPEED
+        angular_speed=45
         
-        angle=ANGLE
+        angle=3
         
         angular_speed=angular_speed*3.14/180
         
