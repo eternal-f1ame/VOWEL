@@ -1,4 +1,4 @@
-from utils import *
+from data.assets.utils import *
 from global_vars import *
 
 def predict(thresholded):

@@ -1,4 +1,4 @@
-from utils import *
+from data.assets.utils import *
 # !/usr/bin/env python
 
 class Turtle_cleaner():

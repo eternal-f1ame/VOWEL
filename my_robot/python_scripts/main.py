@@ -1,4 +1,4 @@
-from utils import *
+from data.assets.utils import *
 from video import *
 from robot import *
 #!/usr/bin/env python

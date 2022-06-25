@@ -1,4 +1,4 @@
-from utils import *
+from data.assets.utils import *
 
 def segment(image,bg,threshold = 25):
     

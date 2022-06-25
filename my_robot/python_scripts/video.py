@@ -1,4 +1,4 @@
-from utils import *
+from assets.utils import *
 from count_fingers import *
 from predict import *
 from run_avg import *

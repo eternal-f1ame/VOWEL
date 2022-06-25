@@ -1,4 +1,4 @@
-from utils import *
+from data.assets.utils import *
 def count(thresholded, segmented):
   
     chull = cv2.convexHull(segmented)
