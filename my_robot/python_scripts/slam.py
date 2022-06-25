@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-# license removed for brevity
-
-
+# -*- coding: utf-8 -*-
 import rospy
 from geometry_msgs.msg import Pose
 from nav_msgs.msg import Odometry
@@ -13,5 +11,4 @@ rospy.init_node('check_odometry')
 odom_sub = rospy.Subscriber('/odom', Odometry, callback)
 rospy.spin()
 
-
-
+# EOL

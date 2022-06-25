@@ -1,6 +1,7 @@
 from robot import Turtle_cleaner
-from data.assets.utils import *
+from assets.utils import load_model
 
 model = load_model('saved_model/gest_recog')
 X = Turtle_cleaner()
 
+# EOL

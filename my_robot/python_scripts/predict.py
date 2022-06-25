@@ -1,5 +1,5 @@
-from data.assets.utils import *
-from global_vars import *
+from assets.utils import cv2
+from global_vars import model
 
 def predict(thresholded):
 
@@ -26,3 +26,4 @@ def predict(thresholded):
         
     return dict[key]
 
+# EOL
