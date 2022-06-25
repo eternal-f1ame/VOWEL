@@ -1,3 +1,5 @@
+import os, sys
+sys.path.append(os.getcwd())
 from assets.utils import imutils,cv2
 
 from predict import pred

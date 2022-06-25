@@ -1,24 +1,25 @@
-import os
-import sys
+import os, sys
 sys.path.append(os.getcwd())
+from assets.utils import shutil, time, imutils, cv2, json, Process
 
-from multiprocessing import Process
-import time
-
-import imutils, cv2
-import json
-
-EVENT = True
+DIR = 'data'
+with open(DIR+'/'+"EVENT.json") as event:
+                    EVENT = json.load(event)
+                    EVENT["EVENT"] = False
+                    json.dump(EVENT, open(DIR+'/'+"EVENT.json", 'w'))
 NAME = str(input("Enter Gesture name: "))
 IMAGE_NUM = int(input("Enter number of images: "))
+NUM = open(f'{DIR}/class_num').read()
+ENCODINGS = f'{DIR}/encodings.json'
 
 def run_camera():
 
-    DIR = 'data'
-    NUM = open(f'{DIR}/class_num').read()
-    ENCODINGS = f'{DIR}/encodings.json'
+    global DIR
+
     global NAME
     global IMAGE_NUM
+    global NUM
+    global ENCODINGS
 
     with open(ENCODINGS) as encodings:
         encoded = json.load(encodings)
@@ -34,10 +35,15 @@ def run_camera():
         top = 64
         bottom = 464
 
-        print("[INFO] warming up...\nPress 's' to start")
+        print("[INFO] warming up...")
         while (True):
+
             global EVENT
-            print(EVENT)
+
+            if not EVENT["EVENT"]:
+                with open(DIR+'/'+"EVENT.json") as event:
+                    EVENT = json.load(event)
+
             (captured, frame) = camera.read()
 
             frame = imutils.resize(frame, width = 640, height = 800)
@@ -54,7 +60,7 @@ def run_camera():
 
             keypressed = cv2.waitKey(1)
 
-            if EVENT:
+            if EVENT["EVENT"]:
 
                 if num_frames%50 == 0:
                     cv2.imwrite(filename=f"{DIR}/gestures/{NUM}/image"+str(int(num_frames/50))+".jpg",img = blur )
@@ -66,12 +72,16 @@ def run_camera():
                     break
 
                 num_frames += 1
-
+    except KeyboardInterrupt:
+        print("\n\n[INFO] exiting...")
+        shutil.rmtree(DIR + '/gestures/' + NUM)
+        open(f"{DIR}/class_num", 'w').write(str(int(NUM)))
+        sys.exit()
     except:
         print("Error")
         camera.release()
         cv2.destroyAllWindows()
-        os.rmdir(DIR + '/gestures/' + NUM)
+        shutil.rmtree(DIR + '/gestures/' + NUM)
         raise
 
     json.dump(encoded, open(ENCODINGS, 'w'))
@@ -79,22 +89,34 @@ def run_camera():
 
 def wait_response():
     global EVENT
-    while not EVENT:
-        print("[INFO] starting in 10 seconds...")
-        time.sleep(10)
-        EVENT = True
-        print("[INFO] starting...")
-        print(EVENT)
-        break
-
+    global NUM
+    while not EVENT["EVENT"]:
+        try:
+            time.sleep(2)
+            print("[INFO] starting in 5 seconds... Press 'ctrl+c' to quit")
+            time.sleep(5)
+            EVENT["EVENT"] = True
+            print("[INFO] starting...")
+            json.dump(EVENT, open(DIR+'/'+"EVENT.json", 'w'))
+            break
+        except KeyboardInterrupt:
+            print("\n\n[INFO] exiting...")
+            shutil.rmtree(DIR + '/gestures/' + NUM)
+            open(f"{DIR}/class_num", 'w').write(str(int(NUM)))
+            sys.exit()
 
 if __name__ == "__main__":
     p1 = Process(target=run_camera)
     p1.start()
     p2 = Process(target=wait_response)
     p2.start()
-    p1.join()
-    p2.join()
+    try:
+        p1.join()
+    except:
+        pass
+    try:
+        p2.join()
+    except:
+        pass
 
-
-
+# EOL

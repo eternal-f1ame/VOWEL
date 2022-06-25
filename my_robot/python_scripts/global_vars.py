@@ -1,3 +1,5 @@
+import os, sys
+sys.path.append(os.getcwd())
 from robot import Turtle_cleaner
 from assets.utils import load_model
 

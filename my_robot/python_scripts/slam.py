@@ -1,8 +1,8 @@
+import os, sys
+sys.path.append(os.getcwd())
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import rospy
-from geometry_msgs.msg import Pose
-from nav_msgs.msg import Odometry
+from assets.utils import rospy, Pose, Odometry
 
 def callback(msg):
     print(msg.pose)

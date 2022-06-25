@@ -1,7 +1,10 @@
+import os, sys
+sys.path.append(os.getcwd())
+
 from predict import predict
 from assets.utils import imutils,cv2
 from global_vars import load_model
-from basic_video_functions import run_average, run_avg, segment_image, count_fingers
+from basic_video_functions import run_average, segment_image, count_fingers
 
 def video(X):
 
@@ -44,14 +47,6 @@ def video(X):
                 (thresholded, segmented) = hand
                 cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
                 fingers,chull = count_fingers(thresholded,segmented)
-                if num % 10 == 0:
-
-                    finger_disp = fingerC
-                    fingerC = 0
-
-                else:
-                    fingerC += fingers
-                    num += 1
 
                 res = predict(thresholded)
                 if res == 'right'or res == 'left':

@@ -1,3 +1,5 @@
+import os, sys
+sys.path.append(os.getcwd())
 from video import video
 from assets.utils import json
 #!/usr/bin/env python

@@ -1,3 +1,5 @@
+import os, sys
+sys.path.append(os.getcwd())
 from assets.utils import cv2, pairwise, np
 
 def segment_image(image,bg,threshold = 25):
@@ -60,6 +62,5 @@ def count_fingers(thresholded, segmented):
             count += 1
 
     return count,chullCopy
-
 
 # EOL

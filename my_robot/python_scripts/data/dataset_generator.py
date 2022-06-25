@@ -1,14 +1,11 @@
-import os
-import sys
+import os, sys
 sys.path.append(os.getcwd())
-
-import tensorflow as tf
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from assets.utils import ImageDataGenerator
 
 def generate_data(batch_size, target_size, augmentation_config):
 
     DATA_DIR = 'data'
-    IMAGE_DIR = f'gestures'
+    IMAGE_DIR = f'{DATA_DIR}/gestures'
 
     image_generator = ImageDataGenerator(
         rescale=1./255,
@@ -25,3 +22,7 @@ def generate_data(batch_size, target_size, augmentation_config):
         batch_size=batch_size,
         class_mode='categorical',
     )
+
+    return image_data
+
+# EOL

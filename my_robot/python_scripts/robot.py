@@ -1,3 +1,5 @@
+import os, sys
+sys.path.append(os.getcwd())
 from assets.utils import rospy,Twist
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- 
