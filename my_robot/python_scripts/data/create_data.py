@@ -8,7 +8,7 @@ import time
 import imutils, cv2
 import json
 
-EVENT = False
+EVENT = True
 NAME = str(input("Enter Gesture name: "))
 IMAGE_NUM = int(input("Enter number of images: "))
 
