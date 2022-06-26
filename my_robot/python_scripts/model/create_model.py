@@ -69,6 +69,16 @@ def get_model(base_architecture, model_type, num_classes, config):
         # layer = Dropout(0.2)(layer)
         layer = Dense(config.embedding_size)(layer)
         out = Lambda(lambda  x: K.l2_normalize(x,axis=1))(layer)
+        embedding = Model(INPUT, out)
+
+        Input_1 = Input(shape=(config.Height, config.Width, 3))
+        Input_2 = Input(shape=(config.Height, config.Width, 3))
+
+        embedding_1 = embedding(Input_1)
+        embedding_2 = embedding(Input_2)
+
+        distance = Lambda(euclideanDistance, output_shape=eucl_dist_output_shape)(embedding_1, embedding_2)
+        model = Model([Input_1, Input_2], distance)
 
         loss = get_siamese_loss(config.siamese_loss)
 
