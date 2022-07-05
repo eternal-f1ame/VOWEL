@@ -3,14 +3,15 @@ sys.path.append(os.getcwd())
 from assets.utils import shutil, time, imutils, cv2, json, Process
 
 DIR = 'data'
-with open(DIR+'/'+"EVENT.json") as event:
-                    EVENT = json.load(event)
-                    EVENT["EVENT"] = False
-                    json.dump(EVENT, open(DIR+'/'+"EVENT.json", 'w'))
 NAME = str(input("Enter Gesture name: "))
 IMAGE_NUM = int(input("Enter number of images: "))
 NUM = open(f'{DIR}/class_num').read()
 ENCODINGS = f'{DIR}/encodings.json'
+
+with open(DIR+'/'+"EVENT.json") as event:
+                    EVENT = json.load(event)
+                    EVENT["EVENT"] = False
+                    json.dump(EVENT, event)
 
 def run_camera():
 

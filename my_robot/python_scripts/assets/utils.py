@@ -17,7 +17,7 @@ from tensorflow.keras.activations import relu,softmax,tanh
 import tensorflow.keras.losses as losses
 from tensorflow.python.keras.models import load_model
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-import tf.keras.applications as applications
+import tensorflow.keras.applications as applications
 import tensorflow_addons as tfa
 import tensorflow_addons.losses as siamese_losses
 import keras.backend as K

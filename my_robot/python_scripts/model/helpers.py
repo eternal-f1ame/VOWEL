@@ -27,7 +27,7 @@ class Pair(object):
     def get_pairs(self, Imge_generator):
         x, y = self.x, self.y
         pairs, labels = self.makePairs(len(np.unique(y)))
-        return ImageDataGenerator.flow(pairs, labels, )
+        return ImageDataGenerator.flow(pairs, labels)
 
     def makePairs(self, num_classes):
         num_classes = num_classes
