@@ -1,28 +1,36 @@
-import os, sys
-sys.path.append(os.getcwd())
-from assets.utils import shutil, time, imutils, cv2, json, Process
+"""
+creating dataset
+"""
+import os
+import sys
+import json
+import time
+import shutil
+from multiprocessing import Process
+import imutils
+import cv2
+
+sys.path.append("../")
+
 
 DIR = 'data'
 NAME = str(input("Enter Gesture name: "))
 IMAGE_NUM = int(input("Enter number of images: "))
-NUM = open(f'{DIR}/class_num').read()
+NUM = open(f'{DIR}/class_num', encoding="utf-8").read()
 ENCODINGS = f'{DIR}/encodings.json'
 
-with open(DIR+'/'+"EVENT.json") as event:
-                    EVENT = json.load(event)
-                    EVENT["EVENT"] = False
-                    json.dump(EVENT, event)
+with open(DIR+'/'+"EVENT.json", encoding="utf-8") as event:
+    EVENT = json.load(event)
+    EVENT["EVENT"] = False
+    json.dump(EVENT, open(DIR+'/'+"EVENT.json", 'w', encoding="utf-8"))
 
 def run_camera():
+    """
+    This function runs the camera pipeline.
+    """
+    global DIR, NAME, IMAGE_NUM, NUM, ENCODINGS
 
-    global DIR
-
-    global NAME
-    global IMAGE_NUM
-    global NUM
-    global ENCODINGS
-
-    with open(ENCODINGS) as encodings:
+    with open(ENCODINGS, encoding="utf-8") as encodings:
         encoded = json.load(encodings)
     encoded[int(NUM)] = NAME
 
@@ -37,7 +45,7 @@ def run_camera():
         bottom = 464
 
         print("[INFO] warming up...")
-        while (True):
+        while True:
 
             global EVENT
 
@@ -53,9 +61,6 @@ def run_camera():
             clone = frame.copy()
             roi = frame[top:bottom, left:right]
             blur = cv2.GaussianBlur(roi, (7, 7), 0)
-
-            # gray = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)
-
             cv2.imshow("video feed", clone)
             cv2.imshow("ROI", blur)
 
@@ -64,8 +69,9 @@ def run_camera():
             if EVENT["EVENT"]:
 
                 if num_frames%50 == 0:
-                    cv2.imwrite(filename=f"{DIR}/gestures/{NUM}/image"+str(int(num_frames/50))+".jpg",img = blur )
-                    print("image_{}.jpg saved".format(int(num_frames/50)))
+                    cv2.imwrite(filename=f"{DIR}/gestures/{NUM}/image"+
+                    str(int(num_frames/50))+".jpg",img = blur )
+                    print(f"image_{int(num_frames/50)}.jpg saved")
 
                 if num_frames == 50*IMAGE_NUM+1:
                     camera.release()
@@ -85,10 +91,13 @@ def run_camera():
         shutil.rmtree(DIR + '/gestures/' + NUM)
         raise
 
-    json.dump(encoded, open(ENCODINGS, 'w'))
-    open(f"{DIR}/class_num", 'w').write(str(int(NUM)+1))
+    json.dump(encoded, open(ENCODINGS, 'w', encoding="utf-8"))
+    open(f"{DIR}/class_num", 'w',encoding="utf-8").write(str(int(NUM)+1))
 
 def wait_response():
+    """
+    This function waits for the response from the user.
+    """
     global EVENT
     global NUM
     while not EVENT["EVENT"]:
