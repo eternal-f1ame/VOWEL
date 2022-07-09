@@ -29,6 +29,6 @@ def predict(thresholded):
     if key not in keys:
         return "none"
 
-    return dict[key]
+    return dictionary[key]
 
 # EOL

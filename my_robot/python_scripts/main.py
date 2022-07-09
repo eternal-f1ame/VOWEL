@@ -4,8 +4,8 @@ Main Function
 import sys
 import json
 sys.path.append("../")
-from video import video
-from hands import hands_live
+from deprecated_video import video
+from video import hands_live
 #!/usr/bin/env python
 from robot import TurtleCleaner
 import rospy

@@ -6,10 +6,12 @@ import sys
 import json
 import time
 import shutil
+import mediapipe as mp
 from multiprocessing import Process
-import imutils
 import cv2
-
+mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
+mp_hands = mp.solutions.hands
 sys.path.append("../")
 
 
@@ -39,50 +41,120 @@ def run_camera():
         camera = cv2.VideoCapture(0)
 
         num_frames = 1
-        left = 300
-        right = 700
-        top = 64
-        bottom = 464
+        # left = 300
+        # right = 700
+        # top = 64
+        # bottom = 464
 
         print("[INFO] warming up...")
-        while True:
+        with mp_hands.Hands(
+        model_complexity=0,
+        min_detection_confidence=0.5,
+        min_tracking_confidence=0.5) as hands:
+            while camera.isOpened():
 
-            global EVENT
+                global EVENT
 
-            if not EVENT["EVENT"]:
-                with open(DIR+'/'+"EVENT.json") as event:
-                    EVENT = json.load(event)
+                if not EVENT["EVENT"]:
+                    with open(DIR+'/'+"EVENT.json", encoding="utf-8") as new_event:
+                        EVENT = json.load(new_event)
 
-            (captured, frame) = camera.read()
+                # (captured, frame) = camera.read()
 
-            frame = imutils.resize(frame, width = 640, height = 800)
-            frame = cv2.flip(frame,1)
+                # frame = imutils.resize(frame, width = 640, height = 800)
+                # frame = cv2.flip(frame,1)
 
-            clone = frame.copy()
-            roi = frame[top:bottom, left:right]
-            blur = cv2.GaussianBlur(roi, (7, 7), 0)
-            cv2.imshow("video feed", clone)
-            cv2.imshow("ROI", blur)
+                # clone = frame.copy()
+                # roi = frame[top:bottom, left:right]
+                # blur = cv2.GaussianBlur(roi, (7, 7), 0)
+                # cv2.imshow("video feed", clone)
+                # cv2.imshow("ROI", blur)
 
-            keypressed = cv2.waitKey(1)
+                # keypressed = cv2.waitKey(1)
 
-            if EVENT["EVENT"]:
+                # if EVENT["EVENT"]:
 
-                if num_frames%50 == 0:
-                    cv2.imwrite(filename=f"{DIR}/gestures/{NUM}/image"+
-                    str(int(num_frames/50))+".jpg",img = blur )
-                    print(f"image_{int(num_frames/50)}.jpg saved")
+                #     if num_frames%50 == 0:
+                #         cv2.imwrite(filename=f"{DIR}/gestures/{NUM}/image"+
+                #         str(int(num_frames/50))+".jpg",img = blur )
+                #         print(f"image_{int(num_frames/50)}.jpg saved")
 
-                if num_frames == 50*IMAGE_NUM+1:
-                    camera.release()
-                    cv2.destroyAllWindows()
-                    break
+                #     if num_frames == 50*IMAGE_NUM+1:
+                #         camera.release()
+                #         cv2.destroyAllWindows()
+                #         break
 
-                num_frames += 1
+                #     num_frames += 1
+
+                success, image = camera.read()
+                h, w, _ = image.shape
+                x_max = 0
+                y_max = 0
+                x_min = h
+                y_min = w
+
+                if not success:
+                    print("Ignoring empty camera frame.")
+                    continue
+                # To improve performance, optionally mark the image as not writeable to
+                # pass by reference.
+                image.flags.writeable = True
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                results = hands.process(image)
+
+                # Draw the hand annotations on the image.
+                image.flags.writeable = True
+                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                cv2.imshow("video`  feed", image)
+                _ = cv2.waitKey(1)
+                if results.multi_hand_landmarks:
+
+                    for hand_landmarks in results.multi_hand_landmarks:
+                        for landmark in hand_landmarks.landmark:
+                            x = int(landmark.x * w)
+                            y = int(landmark.y * h)
+                            if x > x_max:
+                                x_max = x
+                            if y > y_max:
+                                y_max = y
+                            if x < x_min:
+                                x_min = x
+                            if y < y_min:
+                                y_min = y
+                        x_1 = x_min - abs(int(((x_min+x_max)//2)*0.1))
+                        x_2 = x_max + abs(int(((x_min+x_max)//2)*0.1))
+                        y_1 = y_min - abs(int(((y_min+y_max)//2)*0.1))
+                        y_2 = y_max + abs(int(((y_min+y_max)//2)*0.1))
+                    
+                    cv2.rectangle(image,(x_1,y_1),(x_2,y_2),(0, 255, 0), 2)
+                    roi = image[y_1:y_2, x_1:x_2]
+                    try:
+                        roi = cv2.resize(roi, (128, 128))
+                        if EVENT["EVENT"]:
+
+                            if num_frames%50 == 0:
+                                cv2.imwrite(filename=f"{DIR}/gestures/{NUM}/image"+
+                                str(int(num_frames/50))+".jpg",img = roi )
+                                print(f"image_{int(num_frames/50)}.jpg saved")
+
+                            if num_frames == 50*IMAGE_NUM+1:
+                                camera.release()
+                                cv2.destroyAllWindows()
+                                break
+
+                            num_frames += 1
+                        
+                        # roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+                        cv2.imshow('Hand', cv2.flip(roi, 1))
+                        _ = cv2.waitKey(1)
+                    except Exception as exp:
+                        continue
+                        # raise Exception("Error in resizing") from exp
+
     except KeyboardInterrupt:
         print("\n\n[INFO] exiting...")
         shutil.rmtree(DIR + '/gestures/' + NUM)
-        open(f"{DIR}/class_num", 'w').write(str(int(NUM)))
+        open(f"{DIR}/class_num", 'w', encoding="utf-8").write(str(int(NUM)))
         sys.exit()
     except:
         print("Error")
@@ -107,12 +179,12 @@ def wait_response():
             time.sleep(5)
             EVENT["EVENT"] = True
             print("[INFO] starting...")
-            json.dump(EVENT, open(DIR+'/'+"EVENT.json", 'w'))
+            json.dump(EVENT, open(DIR+'/'+"EVENT.json", 'w', encoding="utf-8"))
             break
         except KeyboardInterrupt:
             print("\n\n[INFO] exiting...")
             shutil.rmtree(DIR + '/gestures/' + NUM)
-            open(f"{DIR}/class_num", 'w').write(str(int(NUM)))
+            open(f"{DIR}/class_num", 'w', encoding='utf-8').write(str(int(NUM)))
             sys.exit()
 
 if __name__ == "__main__":

@@ -1,76 +1,130 @@
 """
-Main Video Function
+Hand detector
 """
 import sys
 import cv2
-import imutils
+import mediapipe as mp
 sys.path.append("../")
-
+from robot import TurtleCleaner
 from predict import predict
-from global_vars import load_model
-from basic_video_functions import run_average, segment_image, count_fingers
+mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
+mp_hands = mp.solutions.hands
 
-def video(_x):
+# For webcam input:
+
+def hands_live(_x):
     """
-    This function is used to generate the video.
+    This function runs the hands pipeline on a webcam stream.
     """
-    _aweight = 0.1
-    _background = None
-    camera = cv2.VideoCapture(-1)
-    top, right, bottom, left = 10, 350, 225, 590
-    fingers = 0
-    num_frames = 0
+    cap = cv2.VideoCapture(-1)
+    with mp_hands.Hands(
+        model_complexity=0,
+        min_detection_confidence=0.5,
+        min_tracking_confidence=0.5) as hands:
+        while cap.isOpened():
+            success, image = cap.read()
+            h, w, _ = image.shape
+            x_max = 0
+            y_max = 0
+            x_min = h
+            y_min = w
 
-    while True:
+            if not success:
+                print("Ignoring empty camera frame.")
+                continue
 
-        (_, frame) = camera.read()
-        frame = imutils.resize(frame, width=700)
-        frame = cv2.flip(frame, 1)
-        clone = frame.copy()
+            # To improve performance, optionally mark the image as not writeable to
+            # pass by reference.
+            image.flags.writeable = False
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            results = hands.process(image)
 
-        roi = frame[top:bottom, right:left]
-        gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
-        gray = cv2.GaussianBlur(gray, (7, 7), 0)
+            # Draw the hand annotations on the image.
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-        if num_frames < 50:
-            _background = run_average(gray, _aweight,_background)
-
-        else:
-            if num_frames == 50:
-                print('''
-
-                Background Readed
+            if results.multi_hand_landmarks:
+                for hand_landmarks in results.multi_hand_landmarks:
+                    for landmark in hand_landmarks.landmark:
+                        x = int(landmark.x * w)
+                        y = int(landmark.y * h)
+                        if x > x_max:
+                            x_max = x
+                        if y > y_max:
+                            y_max = y
+                        if x < x_min:
+                            x_min = x
+                        if y < y_min:
+                            y_min = y
+                    x_1 = x_min - abs(int(((x_min+x_max)//2)*0.2))
+                    x_2 = x_max + abs(int(((x_min+x_max)//2)*0.2))
+                    y_1 = y_min - abs(int(((y_min+y_max)//2)*0.2))
+                    y_2 = y_max + abs(int(((y_min+y_max)//2)*0.2))
                 
-                We are good to Go !!!
-                
-                ''')
+                cv2.rectangle(image,(x_1,y_1),(x_2,y_2),(0, 255, 0), 2)
+                roi = image[y_1:y_2, x_1:x_2]
+                try:
+                    roi = cv2.resize(roi, (128, 128))
+                    # roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+                    cv2.imshow('Hand', cv2.flip(roi, 1))
 
-            hand = segment_image(gray,_background)
-            if hand is not None:
+                    res = predict(roi)
+                    if res in ('right','left'):
+                        _x.left_right(res)
 
-                (thresholded, segmented) = hand
-                cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
-                fingers,_ = count_fingers(thresholded,segmented)
+                    if res in ('front','back'):
+                        _x.front_back(res)
 
-                res = predict(roi)
-                if res in ('right','left'):
-                    _x.left_right(res)
+                    print(res)
+                except:
+                    continue
+                        # return
 
-                if res in ('front','back'):
-                    _x.front_back(res)
+            cv2.imshow('Video', cv2.flip(image, 1))
 
-                cv2.putText(
-                    clone, str(int(fingers)), (70, 85), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
-                cv2.imshow("Thesholded", thresholded)
-                cv2.putText(clone,res, (70, 35), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+            if cv2.waitKey(5) & 0xFF == 27:
+                break
 
-        cv2.rectangle(clone, (left, top), (right, bottom), (0,255,0), 2)
-        num_frames += 1
-        cv2.imshow("Video Feed", clone)
+        cap.release()
 
-        _ = cv2.waitKey(1) & 0xFF
-        if num_frames == 100000:
+# # For static images:
+# IMAGE_FILES = []
+# with mp_hands.Hands(
+#     static_image_mode=True,
+#     max_num_hands=2,
+#     min_detection_confidence=0.5) as hands:
+#   for idx, file in enumerate(IMAGE_FILES):
+#     # Read an image, flip it around y-axis for correct handedness output (see
+#     # above).
+#     image = cv2.flip(cv2.imread(file), 1)
+#     # Convert the BGR image to RGB before processing.
+#     results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
-            break
-
-# EOL
+#     # Print handedness and draw hand landmarks on the image.
+#     print('Handedness:', results.multi_handedness)
+#     if not results.multi_hand_landmarks:
+#       continue
+#     image_height, image_width, _ = image.shape
+#     annotated_image = image.copy()
+#     for hand_landmarks in results.multi_hand_landmarks:
+#       print('hand_landmarks:', hand_landmarks)
+#       print(
+#           f'Index finger tip coordinates: (',
+#           f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x * image_width}, '
+#           f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y * image_height})'
+#       )
+#       mp_drawing.draw_landmarks(
+#           annotated_image,
+#           hand_landmarks,
+#           mp_hands.HAND_CONNECTIONS,
+#           mp_drawing_styles.get_default_hand_landmarks_style(),
+#           mp_drawing_styles.get_default_hand_connections_style())
+#     cv2.imwrite(
+#         '/tmp/annotated_image' + str(idx) + '.png', cv2.flip(annotated_image, 1))
+#     # Draw hand world landmarks.
+#     if not results.multi_hand_world_landmarks:
+#       continue
+#     for hand_world_landmarks in results.multi_hand_world_landmarks:
+#       mp_drawing.plot_landmarks(
+#         hand_world_landmarks, mp_hands.HAND_CONNECTIONS, azimuth=5)

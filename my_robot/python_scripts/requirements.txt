@@ -1,0 +1,10 @@
+tensorflow==2.9
+sklearn
+pandas
+numpy
+imutils
+opencv-python
+absl-py
+tensorflow_addons
+rospy
+mediapipe-python
