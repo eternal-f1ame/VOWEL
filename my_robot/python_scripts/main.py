@@ -5,6 +5,7 @@ import sys
 import json
 sys.path.append("../")
 from video import video
+from hands import hands_live
 #!/usr/bin/env python
 from robot import TurtleCleaner
 import rospy
@@ -22,7 +23,7 @@ if __name__ == '__main__':
         """)
         print(robot_config)
         Bot = TurtleCleaner(robot_config=robot_config)
-        video(Bot)
+        hands_live(Bot)
 
     except rospy.ROSInterruptException:
         pass

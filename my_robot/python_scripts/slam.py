@@ -1,10 +1,21 @@
-import os, sys
-sys.path.append(os.getcwd())
+"""
+Slam operations
+"""
+import sys
+import rospy
+from nav_msgs.msg import Odometry
+sys.path.append('../')
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from assets.utils import rospy, Pose, Odometry
+
+# from geometry_msgs.msg import Pose
+
 
 def callback(msg):
+    """
+    This function is used to get the current position of the robot.
+    """
     print(msg.pose)
 
 rospy.init_node('check_odometry')

@@ -1,8 +1,11 @@
-import os, sys
-sys.path.append(os.getcwd())
+"""
+Global Variables
+"""
+import sys
+sys.path.append('../')
 from robot import TurtleCleaner
-from assets.utils import load_model
+from tensorflow.keras.models import load_model
 
-model = load_model('saved_model/gest_recog')
+model = load_model('model/saved/resnet_model.h5')
 
 # EOL

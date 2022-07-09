@@ -2,7 +2,6 @@
 Hand detector
 """
 import sys
-import json
 import cv2
 import mediapipe as mp
 sys.path.append("../")
@@ -62,30 +61,26 @@ def hands_live(_x):
                     x_2 = x_max + abs(int(((x_min+x_max)//2)*0.1))
                     y_1 = y_min - abs(int(((y_min+y_max)//2)*0.1))
                     y_2 = y_max + abs(int(((y_min+y_max)//2)*0.1))
-                    cv2.rectangle(image,(x_1,y_1),(x_2,y_2),(0, 255, 0), 2)
-                    roi = image[y_1:y_2, x_1:x_2]
-                    roi = cv2.resize(roi, (128, 128))
-                    roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
-                    res = predict(roi)
-                    if res in ('right','left'):
-                        _x.left_right(res)
+                
+                cv2.rectangle(image,(x_1,y_1),(x_2,y_2),(0, 255, 0), 2)
+                roi = image[y_1:y_2, x_1:x_2]
+                roi = cv2.resize(roi, (128, 128))
+                # roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+                cv2.imshow('Hand', cv2.flip(roi, 1))
 
-                    if res in ('front','back'):
-                        _x.front_back(res)
-                        return
-            cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
+                res = predict(roi)
+                if res in ('right','left'):
+                    _x.left_right(res)
+
+                if res in ('front','back'):
+                    _x.front_back(res)
+                        # return
+            cv2.imshow('Video', cv2.flip(image, 1))
 
             if cv2.waitKey(5) & 0xFF == 27:
                 break
 
-    cap.release()
-robot_config = json.load(open(
-'robot_configurations.json',
-encoding="utf-8"))
-
-print(robot_config)
-_x = TurtleCleaner(robot_config=robot_config)
-hands_live(_x)
+        cap.release()
 
 # # For static images:
 # IMAGE_FILES = []

@@ -50,9 +50,9 @@ def video(_x):
 
                 (thresholded, segmented) = hand
                 cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
-                fingers,c_hull = count_fingers(thresholded,segmented)
+                fingers,_ = count_fingers(thresholded,segmented)
 
-                res = predict(thresholded)
+                res = predict(roi)
                 if res in ('right','left'):
                     _x.left_right(res)
 
@@ -68,7 +68,7 @@ def video(_x):
         num_frames += 1
         cv2.imshow("Video Feed", clone)
 
-        keypress = cv2.waitKey(1) & 0xFF
+        _ = cv2.waitKey(1) & 0xFF
         if num_frames == 100000:
 
             break
