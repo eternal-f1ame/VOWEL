@@ -2,8 +2,8 @@
 Predict Preparation
 """
 import sys
+import cv2
 sys.path.append('../')
-from assets.utils import cv2
 from global_vars import model
 
 def predict(thresholded):
@@ -20,10 +20,10 @@ def predict(thresholded):
             }
 
     image = thresholded.reshape(1,128,128,3)/255
-    print(image.shape)
 
     res = model.predict(image)
     key = str(res.round())
+    print(key)
     keys = dictionary.keys()
 
     if key not in keys:
