@@ -6,8 +6,8 @@ import sys
 import json
 import time
 import shutil
-import mediapipe as mp
 from multiprocessing import Process
+import mediapipe as mp
 import cv2
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -30,7 +30,7 @@ def run_camera():
     """
     This function runs the camera pipeline.
     """
-    global DIR, NAME, IMAGE_NUM, NUM, ENCODINGS
+    # global DIR, NAME, IMAGE_NUM, NUM, ENCODINGS
 
     with open(ENCODINGS, encoding="utf-8") as encodings:
         encoded = json.load(encodings)
@@ -132,12 +132,12 @@ def run_camera():
                         roi = cv2.resize(roi, (128, 128))
                         if EVENT["EVENT"]:
 
-                            if num_frames%50 == 0:
+                            if num_frames%5 == 0:
                                 cv2.imwrite(filename=f"{DIR}/gestures/{NUM}/image"+
-                                str(int(num_frames/50))+".jpg",img = roi )
-                                print(f"image_{int(num_frames/50)}.jpg saved")
+                                str(int(num_frames/5))+".jpg",img = roi )
+                                print(f"image_{int(num_frames/5)}.jpg saved")
 
-                            if num_frames == 50*IMAGE_NUM+1:
+                            if num_frames == 5*IMAGE_NUM+1:
                                 camera.release()
                                 cv2.destroyAllWindows()
                                 break

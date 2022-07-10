@@ -1,11 +1,8 @@
 """
 Hand detector
 """
-import sys
 import cv2
 import mediapipe as mp
-sys.path.append("../")
-from robot import TurtleCleaner
 from predict import predict
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -13,7 +10,7 @@ mp_hands = mp.solutions.hands
 
 # For webcam input:
 
-def hands_live(_x):
+def live():
     """
     This function runs the hands pipeline on a webcam stream.
     """
@@ -29,7 +26,7 @@ def hands_live(_x):
             y_max = 0
             x_min = h
             y_min = w
-
+            res = "stop"
             if not success:
                 print("Ignoring empty camera frame.")
                 continue
@@ -70,61 +67,34 @@ def hands_live(_x):
                     cv2.imshow('Hand', cv2.flip(roi, 1))
 
                     res = predict(roi)
-                    if res in ('right','left'):
-                        _x.left_right(res)
-
-                    if res in ('front','back'):
-                        _x.front_back(res)
 
                     print(res)
                 except:
                     continue
                         # return
-
-            cv2.imshow('Video', cv2.flip(image, 1))
+            open("movement", 'w', encoding="utf-8").write(str(res))
+            image_flip = cv2.flip(image,1)
+            cv2.putText(image_flip ,res, (70, 35), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+            cv2.imshow('Video', image_flip)
 
             if cv2.waitKey(5) & 0xFF == 27:
                 break
 
         cap.release()
 
-# # For static images:
-# IMAGE_FILES = []
-# with mp_hands.Hands(
-#     static_image_mode=True,
-#     max_num_hands=2,
-#     min_detection_confidence=0.5) as hands:
-#   for idx, file in enumerate(IMAGE_FILES):
-#     # Read an image, flip it around y-axis for correct handedness output (see
-#     # above).
-#     image = cv2.flip(cv2.imread(file), 1)
-#     # Convert the BGR image to RGB before processing.
-#     results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
-#     # Print handedness and draw hand landmarks on the image.
-#     print('Handedness:', results.multi_handedness)
-#     if not results.multi_hand_landmarks:
-#       continue
-#     image_height, image_width, _ = image.shape
-#     annotated_image = image.copy()
-#     for hand_landmarks in results.multi_hand_landmarks:
-#       print('hand_landmarks:', hand_landmarks)
-#       print(
-#           f'Index finger tip coordinates: (',
-#           f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x * image_width}, '
-#           f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y * image_height})'
-#       )
-#       mp_drawing.draw_landmarks(
-#           annotated_image,
-#           hand_landmarks,
-#           mp_hands.HAND_CONNECTIONS,
-#           mp_drawing_styles.get_default_hand_landmarks_style(),
-#           mp_drawing_styles.get_default_hand_connections_style())
-#     cv2.imwrite(
-#         '/tmp/annotated_image' + str(idx) + '.png', cv2.flip(annotated_image, 1))
-#     # Draw hand world landmarks.
-#     if not results.multi_hand_world_landmarks:
-#       continue
-#     for hand_world_landmarks in results.multi_hand_world_landmarks:
-#       mp_drawing.plot_landmarks(
-#         hand_world_landmarks, mp_hands.HAND_CONNECTIONS, azimuth=5)
+def move(_x):
+    """
+    This function moves the bot.
+    """
+    while True:
+        with open("movement", 'r', encoding="utf-8") as moves:
+            res = moves.read()
+            # print(f"{res}-move")
+            if res in ('right','left'):
+                _x.left_right(res)
+
+            if res in ('front','back'):
+                _x.front_back(res)
+            
+

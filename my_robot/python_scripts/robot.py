@@ -17,14 +17,13 @@ class TurtleCleaner():
         self.pub=rospy.Publisher('/rover_diff_drive_controller/cmd_vel',Twist,queue_size=1)
         rospy.init_node('TurtleCleaner',anonymous=True)
         self.vel_msg=Twist()
-        self.rate=rospy.Rate(10)
+        self.rate=rospy.Rate(1)
         self.config=robot_config
 
     def front_back(self,res):
         """
         This function is used to move the turtlebot forward and backward.
         """
-
         if res=='front':
             self.vel_msg.linear.x=abs(self.config["linear_speed"])
         if res=='back':
@@ -40,7 +39,6 @@ class TurtleCleaner():
         self.vel_msg.angular.z=0
 
         while not rospy.is_shutdown():
-
             t_0=rospy.Time.now().to_sec()
             current_dist=0
 
@@ -91,10 +89,8 @@ class TurtleCleaner():
                 current_angle=0.4*angular_speed*(t_1-t_0)
                 rate.sleep()
 
-            else:
-
-                self.vel_msg.angular.z=0
-                self.pub.publish(self.vel_msg)
-                break
+            self.vel_msg.angular.z=0
+            self.pub.publish(self.vel_msg)
+            break
 
 # EOL

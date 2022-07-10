@@ -1,14 +1,18 @@
 """
 Main Function
 """
-import sys
 import json
-sys.path.append("../")
-from deprecated_video import video
-from video import hands_live
-#!/usr/bin/env python
-from robot import TurtleCleaner
+import sys
+# from multiprocessing import Process
+from threading import Thread as Process
 import rospy
+from robot import TurtleCleaner
+from video import live, move
+# from deprecated_video import video
+
+#!/usr/bin/env python
+
+
 
 if __name__ == '__main__':
     try:
@@ -23,9 +27,16 @@ if __name__ == '__main__':
         """)
         print(robot_config)
         Bot = TurtleCleaner(robot_config=robot_config)
-        hands_live(Bot)
-
+        p1 = Process(target=move, args=[Bot])
+        p1.start()
+        p2 = Process(target=live)
+        if not p1.is_alive():
+            p1.start()
+        if not p2.is_alive():
+            p2.start()
+        p1.join()
+        p2.join()
     except rospy.ROSInterruptException:
-        pass
+        sys.exit()
 
 # EOL

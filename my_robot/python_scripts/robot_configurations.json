@@ -1,8 +1,8 @@
 {
     "linear_speed": 1,
-    "angular_speed": 45,
+    "angular_speed": 3,
     "linear_acceleration": 0.5,
     "angular_acceleration": 0.5,
-    "distance": 0.01,
+    "distance": 1,
     "angle": 3
 }
