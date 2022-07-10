@@ -96,5 +96,4 @@ def move(_x):
 
             if res in ('front','back'):
                 _x.front_back(res)
-            
-
+#EOL
