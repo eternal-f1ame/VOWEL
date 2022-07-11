@@ -58,7 +58,7 @@ def live():
                     x_2 = x_max + abs(int(((x_min+x_max)//2)*0.2))
                     y_1 = y_min - abs(int(((y_min+y_max)//2)*0.2))
                     y_2 = y_max + abs(int(((y_min+y_max)//2)*0.2))
-                
+
                 cv2.rectangle(image,(x_1,y_1),(x_2,y_2),(0, 255, 0), 2)
                 roi = image[y_1:y_2, x_1:x_2]
                 try:

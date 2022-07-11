@@ -37,7 +37,7 @@ def run_camera():
     encoded[int(NUM)] = NAME
 
     try:
-        os.mkdir(DIR + '/gestures/' + NUM)
+        os.mkdir(DIR + '/dataset/' + NUM)
         camera = cv2.VideoCapture(0)
 
         num_frames = 1
@@ -75,7 +75,7 @@ def run_camera():
                 # if EVENT["EVENT"]:
 
                 #     if num_frames%50 == 0:
-                #         cv2.imwrite(filename=f"{DIR}/gestures/{NUM}/image"+
+                #         cv2.imwrite(filename=f"{DIR}/dataset/{NUM}/image"+
                 #         str(int(num_frames/50))+".jpg",img = blur )
                 #         print(f"image_{int(num_frames/50)}.jpg saved")
 
@@ -105,7 +105,7 @@ def run_camera():
                 # Draw the hand annotations on the image.
                 image.flags.writeable = True
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-                cv2.imshow("video`  feed", image)
+                cv2.imshow("video`  feed", cv2.flip(image,1))
                 _ = cv2.waitKey(1)
                 if results.multi_hand_landmarks:
 
@@ -133,7 +133,7 @@ def run_camera():
                         if EVENT["EVENT"]:
 
                             if num_frames%5 == 0:
-                                cv2.imwrite(filename=f"{DIR}/gestures/{NUM}/image"+
+                                cv2.imwrite(filename=f"{DIR}/dataset/{NUM}/image"+
                                 str(int(num_frames/5))+".jpg",img = roi )
                                 print(f"image_{int(num_frames/5)}.jpg saved")
 
@@ -153,14 +153,14 @@ def run_camera():
 
     except KeyboardInterrupt:
         print("\n\n[INFO] exiting...")
-        shutil.rmtree(DIR + '/gestures/' + NUM)
+        shutil.rmtree(DIR + '/dataset/' + NUM)
         open(f"{DIR}/class_num", 'w', encoding="utf-8").write(str(int(NUM)))
         sys.exit()
     except:
         print("Error")
         camera.release()
         cv2.destroyAllWindows()
-        shutil.rmtree(DIR + '/gestures/' + NUM)
+        shutil.rmtree(DIR + '/dataset/' + NUM)
         raise
 
     json.dump(encoded, open(ENCODINGS, 'w', encoding="utf-8"))
@@ -183,7 +183,7 @@ def wait_response():
             break
         except KeyboardInterrupt:
             print("\n\n[INFO] exiting...")
-            shutil.rmtree(DIR + '/gestures/' + NUM)
+            shutil.rmtree(DIR + '/dataset/' + NUM)
             open(f"{DIR}/class_num", 'w', encoding='utf-8').write(str(int(NUM)))
             sys.exit()
 

@@ -1,11 +1,12 @@
 {
-    "Image_Height":128,
-    "Image_Width":128,
-    "Image_Depth":3,
+    "HEIGHT":128,
+    "WIDTH":128,
+    "DEPTH":3,
+    "base_architecture":"ResNet50",
     "learning_rate":0.001,
     "epochs":100,
-    "batch_size":32,
-    "loss":"categorical_crossentropy",
+    "batch_size":64,
+    "classifier_loss":"categorical_crossentropy",
     "optimizer":"adam",
     "embedding_size":512
 

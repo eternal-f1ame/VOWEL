@@ -1,13 +1,18 @@
-import os, sys
-sys.path.append(os.getcwd())
-from assets.utils import ImageDataGenerator, tf
+"""
+Generating Data
+"""
+import os
+import sys
+import tensorflow as tf
+sys.path.append("../")
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from model.helpers import Pair
-from data.create_paired_data import Pair, Augment
+# from data.create_paired_data import Pair, Augment
 
 def generate_data_for_classifier(DATA_DIR, batch_size, target_size, augmentation_config):
 
     # DATA_DIR = 'data'
-    IMAGE_DIR = f'{DATA_DIR}/gestures'
+    IMAGE_DIR = f'{DATA_DIR}/dataset'
 
     image_generator = ImageDataGenerator(
         rescale=1./255,
@@ -21,16 +26,16 @@ def generate_data_for_classifier(DATA_DIR, batch_size, target_size, augmentation
     image_data = image_generator.flow_from_directory(
         IMAGE_DIR,
         target_size=target_size,
-        batch_size=batch_size,
+        batch_size=int(batch_size),
         class_mode='categorical',
     )
 
     return image_data
 
-def generate_data_for_siamese(DATA_DIR = "C:\\Users\\aeternum\\Documents\\GitHub\\Gesture-Recognition\\my_robot\\python_scripts\\data"):
+def generate_data_for_siamese(DATA_DIR = "../data"):
 
     # DATA_DIR = 'data'
-    IMAGE_DIR = f'{DATA_DIR}\\gestures'
+    IMAGE_DIR = f'{DATA_DIR}\\dataset'
 
     images = []
     labels = []

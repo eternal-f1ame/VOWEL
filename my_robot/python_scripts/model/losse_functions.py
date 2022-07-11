@@ -31,7 +31,7 @@ class LossFunction():
                 return classifier_losses.binary_crossentropy
         except:
             print('Error: loss function not found')
-            return sys.exit()
+        return sys.exit()
 
     def get_siamese_loss(self):
         """
@@ -46,7 +46,7 @@ class LossFunction():
                 return siamese_losses.triplet_semihard_loss
         except:
             print('Error: loss function not found')
-            return sys.exit()
+        return sys.exit()
 
 
 # EOL

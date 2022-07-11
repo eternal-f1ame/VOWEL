@@ -1,14 +1,11 @@
 """
 Main Video Function
 """
-import sys
 import cv2
 import imutils
-sys.path.append("../")
-
 from predict import predict
-from global_vars import load_model
 from basic_video_functions import run_average, segment_image, count_fingers
+
 
 def video(_x):
     """
