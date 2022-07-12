@@ -7,7 +7,7 @@ from predict import predict
 from basic_video_functions import run_average, segment_image, count_fingers
 
 
-def video(_x):
+def video():
     """
     This function is used to generate the video.
     """
@@ -15,7 +15,6 @@ def video(_x):
     _background = None
     camera = cv2.VideoCapture(-1)
     top, right, bottom, left = 10, 350, 225, 590
-    fingers = 0
     num_frames = 0
 
     while True:
@@ -47,19 +46,18 @@ def video(_x):
 
                 (thresholded, segmented) = hand
                 cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
-                fingers,_ = count_fingers(thresholded,segmented)
 
-                res = predict(roi)
-                if res in ('right','left'):
-                    _x.left_right(res)
+                # res = predict(roi)
+                # if res in ('right','left'):
+                #     _x.left_right(res)
 
-                if res in ('front','back'):
-                    _x.front_back(res)
+                # if res in ('front','back'):
+                #     _x.front_back(res)
 
-                cv2.putText(
-                    clone, str(int(fingers)), (70, 85), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+                # cv2.putText(
+                #     clone, str(int(fingers)), (70, 85), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
                 cv2.imshow("Thesholded", thresholded)
-                cv2.putText(clone,res, (70, 35), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+                # cv2.putText(clone,res, (70, 35), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
 
         cv2.rectangle(clone, (left, top), (right, bottom), (0,255,0), 2)
         num_frames += 1
@@ -70,4 +68,5 @@ def video(_x):
 
             break
 
+video()
 # EOL

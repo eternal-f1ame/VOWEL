@@ -54,10 +54,10 @@ def live():
                             x_min = x
                         if y < y_min:
                             y_min = y
-                    x_1 = x_min - abs(int(((x_min+x_max)//2)*0.2))
-                    x_2 = x_max + abs(int(((x_min+x_max)//2)*0.2))
-                    y_1 = y_min - abs(int(((y_min+y_max)//2)*0.2))
-                    y_2 = y_max + abs(int(((y_min+y_max)//2)*0.2))
+                    x_1 = x_min - abs(int(((x_min+x_max)//2)*0.1))
+                    x_2 = x_max + abs(int(((x_min+x_max)//2)*0.1))
+                    y_1 = y_min - abs(int(((y_min+y_max)//2)*0.1))
+                    y_2 = y_max + abs(int(((y_min+y_max)//2)*0.1))
 
                 cv2.rectangle(image,(x_1,y_1),(x_2,y_2),(0, 255, 0), 2)
                 roi = image[y_1:y_2, x_1:x_2]
@@ -68,7 +68,6 @@ def live():
 
                     res = predict(roi)
 
-                    print(res)
                 except:
                     continue
                         # return

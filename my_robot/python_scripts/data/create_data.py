@@ -129,7 +129,7 @@ def run_camera():
                     cv2.rectangle(image,(x_1,y_1),(x_2,y_2),(0, 255, 0), 2)
                     roi = image[y_1:y_2, x_1:x_2]
                     try:
-                        roi = cv2.resize(roi, (128, 128))
+                        roi = cv2.resize(roi, (224, 224))
                         if EVENT["EVENT"]:
 
                             if num_frames%5 == 0:

@@ -22,6 +22,7 @@ def predict(thresholded):
     image = thresholded.reshape(1,128,128,3)/255
 
     res = model.predict(image)
+    print(res.round())
     key = str(res.round())
     keys = dictionary.keys()
 
