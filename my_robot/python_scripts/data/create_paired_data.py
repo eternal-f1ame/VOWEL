@@ -29,25 +29,24 @@ class Pair(object):
         pairs = list()
         labels = list()
 
-        for idx1 in range(len(x)):
-            x1 = x[idx1]
-            label1 = y[idx1]
-            idx2 = random.choice(digit_indices[label1])
-            x2 = x[idx2]
-            
+        for idx_1,_ in enumerate(x):
+            x_1 = x[idx_1]
+            label1 = y[idx_1]
+            idx_2 = random.choice(digit_indices[label1])
+            x_2 = x[idx_2]
+
             labels += list([1])
-            pairs += [[x1, x2]]
+            pairs += [[x_1, x_2]]
 
             label2 = random.randint(0, num_classes-1)
             while label2 == label1:
                 label2 = random.randint(0, num_classes-1)
 
-            idx2 = random.choice(digit_indices[label2])
-            x2 = x[idx2]
-            
+            idx_2 = random.choice(digit_indices[label2])
+            x_2 = x[idx_2]
+
             labels += list([0])
-            pairs += [[x1, x2]]
-        
+            pairs += [[x_1, x_2]]
         return np.array(pairs), np.array(labels)
 
 class Augment(object):
@@ -55,7 +54,7 @@ class Augment(object):
     def rotate_img(img):
         img = tf.keras.layers.RandomRotation(0.2)(img)
         return img
-    
+
     def zoom_img(img):
         img = tf.keras.layers.RandomZoom(0.5)(img)
         return img
@@ -71,4 +70,3 @@ class Augment(object):
     def shear_img(img):
         img = tf.keras.preprocessing.image.random_shear(img, 0.2)
         return img
-
