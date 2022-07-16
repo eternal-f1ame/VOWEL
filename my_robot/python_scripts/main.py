@@ -12,8 +12,6 @@ from video import live, move
 
 #!/usr/bin/env python
 
-
-
 if __name__ == '__main__':
     try:
         robot_config = json.load(open(
@@ -26,9 +24,18 @@ if __name__ == '__main__':
 
         """)
         print(robot_config)
+
+        # Initializing the robot
         Bot = TurtleCleaner(robot_config=robot_config)
+
+        # Initializing the threads
+        #-------------------------
+
+        # video_thread : Bot Movement Control
         p1 = Process(target=move, args=[Bot])
         p1.start()
+
+        # video_thread : Hand Gesture Recognition
         p2 = Process(target=live)
         if not p1.is_alive():
             p1.start()

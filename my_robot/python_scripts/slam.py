@@ -10,8 +10,6 @@ sys.path.append('../')
 # -*- coding: utf-8 -*-
 
 # from geometry_msgs.msg import Pose
-
-
 def callback(msg):
     """
     This function is used to get the current position of the robot.

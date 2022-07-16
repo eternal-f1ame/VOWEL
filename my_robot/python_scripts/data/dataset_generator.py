@@ -7,12 +7,13 @@ import tensorflow as tf
 sys.path.append("../")
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from model.helpers import Pair
-# from data.create_paired_data import Pair, Augment
+from data.create_paired_data import Pair, Augment
 
-def generate_data_for_classifier(DATA_DIR, batch_size, target_size, augmentation_config):
-
-    # DATA_DIR = 'data'
-    IMAGE_DIR = f'{DATA_DIR}/dataset'
+def generate_data_for_classifier(data_dir, batch_size, target_size, augmentation_config):
+    """
+    Generate data for classifier.
+    """
+    image_dir = f'{data_dir}/dataset'
 
     image_generator = ImageDataGenerator(
         rescale=1./255,
@@ -22,9 +23,10 @@ def generate_data_for_classifier(DATA_DIR, batch_size, target_size, augmentation
         shear_range=augmentation_config['shear_range'],
         zoom_range=augmentation_config['zoom_range'],
         horizontal_flip=augmentation_config['horizontal_flip'],
-        )
+    )
+
     image_data = image_generator.flow_from_directory(
-        IMAGE_DIR,
+        image_dir,
         target_size=target_size,
         batch_size=int(batch_size),
         class_mode='categorical',
@@ -32,17 +34,21 @@ def generate_data_for_classifier(DATA_DIR, batch_size, target_size, augmentation
 
     return image_data
 
-def generate_data_for_siamese(DATA_DIR = "../data"):
-
-    # DATA_DIR = 'data'
-    IMAGE_DIR = f'{DATA_DIR}\\dataset'
+def generate_data_for_siamese(data_dir = "../data"):
+    """
+    Generate data for siamese network.
+    """
+    image_dir = f'{data_dir}\\dataset'
 
     images = []
     labels = []
 
-    # Map paths to images
 
+    # Augmenting images pairwise // Still to test this function
     def augment_pairs(image_data_1,image_data_2,labels,augmentation_config):
+        """
+        Augment the pairs of images.
+        """
 
         augmented_image_data_1 = image_data_1
         augmented_image_data_2 = image_data_2
@@ -100,16 +106,17 @@ def generate_data_for_siamese(DATA_DIR = "../data"):
 
 
     def decode_img(img):
+        """
+        Decode the image.
+        """
         img = tf.io.read_file(img)
         img = tf.image.decode_jpeg(img, channels=3)
         img = tf.image.resize(img, (224, 224))
-        # img = tf.image.convert_image_dtype(img, tf.float32)
         return img
 
-    
-    for folder in os.listdir(IMAGE_DIR):
-        for image in os.listdir(f'{IMAGE_DIR}/{folder}'):
-            images.append(f'{IMAGE_DIR}/{folder}/{image}')
+    for folder in os.listdir(image_dir):
+        for image in os.listdir(f'{image_dir}/{folder}'):
+            images.append(f'{image_dir}/{folder}/{image}')
             labels.append(int(folder))
 
     pair_generator = Pair((images, labels))
@@ -122,7 +129,5 @@ def generate_data_for_siamese(DATA_DIR = "../data"):
     pair_labels = pair_labels.map(lambda x: tf.one_hot(x, 2))
 
     return (element_set_1, element_set_2, pair_labels)
-    
-
 
 # EOL

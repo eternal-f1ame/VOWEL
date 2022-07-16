@@ -3,11 +3,12 @@
     "WIDTH":128,
     "DEPTH":3,
     "base_architecture":"ResNet50",
+    "model_type":"classifier",
     "learning_rate":0.001,
     "epochs":100,
     "batch_size":64,
-    "classifier_loss":"categorical_crossentropy",
+    "loss":"categorical_crossentropy",
     "optimizer":"adam",
-    "embedding_size":512
+    "embedding_size":128
 
 }

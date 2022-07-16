@@ -3,8 +3,7 @@ Main Video Function
 """
 import cv2
 import imutils
-from predict import predict
-from basic_video_functions import run_average, segment_image, count_fingers
+from basic_video_functions import run_average, segment_image
 
 
 def video():
@@ -46,18 +45,7 @@ def video():
 
                 (thresholded, segmented) = hand
                 cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
-
-                # res = predict(roi)
-                # if res in ('right','left'):
-                #     _x.left_right(res)
-
-                # if res in ('front','back'):
-                #     _x.front_back(res)
-
-                # cv2.putText(
-                #     clone, str(int(fingers)), (70, 85), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
                 cv2.imshow("Thesholded", thresholded)
-                # cv2.putText(clone,res, (70, 35), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
 
         cv2.rectangle(clone, (left, top), (right, bottom), (0,255,0), 2)
         num_frames += 1
@@ -68,5 +56,10 @@ def video():
 
             break
 
-video()
+try:
+    video()
+except SystemExit as _e:
+    print(_e)
+    cv2.destroyAllWindows()
+
 # EOL

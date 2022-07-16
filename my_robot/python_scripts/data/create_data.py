@@ -41,10 +41,6 @@ def run_camera():
         camera = cv2.VideoCapture(0)
 
         num_frames = 1
-        # left = 300
-        # right = 700
-        # top = 64
-        # bottom = 464
 
         print("[INFO] warming up...")
         with mp_hands.Hands(
@@ -59,33 +55,6 @@ def run_camera():
                     with open(DIR+'/'+"EVENT.json", encoding="utf-8") as new_event:
                         EVENT = json.load(new_event)
 
-                # (captured, frame) = camera.read()
-
-                # frame = imutils.resize(frame, width = 640, height = 800)
-                # frame = cv2.flip(frame,1)
-
-                # clone = frame.copy()
-                # roi = frame[top:bottom, left:right]
-                # blur = cv2.GaussianBlur(roi, (7, 7), 0)
-                # cv2.imshow("video feed", clone)
-                # cv2.imshow("ROI", blur)
-
-                # keypressed = cv2.waitKey(1)
-
-                # if EVENT["EVENT"]:
-
-                #     if num_frames%50 == 0:
-                #         cv2.imwrite(filename=f"{DIR}/dataset/{NUM}/image"+
-                #         str(int(num_frames/50))+".jpg",img = blur )
-                #         print(f"image_{int(num_frames/50)}.jpg saved")
-
-                #     if num_frames == 50*IMAGE_NUM+1:
-                #         camera.release()
-                #         cv2.destroyAllWindows()
-                #         break
-
-                #     num_frames += 1
-
                 success, image = camera.read()
                 h, w, _ = image.shape
                 x_max = 0
@@ -96,8 +65,8 @@ def run_camera():
                 if not success:
                     print("Ignoring empty camera frame.")
                     continue
-                # To improve performance, optionally mark the image as not writeable to
-                # pass by reference.
+
+                # Detect hands
                 image.flags.writeable = True
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 results = hands.process(image)
@@ -125,31 +94,31 @@ def run_camera():
                         x_2 = x_max + abs(int(((x_min+x_max)//2)*0.1))
                         y_1 = y_min - abs(int(((y_min+y_max)//2)*0.1))
                         y_2 = y_max + abs(int(((y_min+y_max)//2)*0.1))
-                    
+
                     cv2.rectangle(image,(x_1,y_1),(x_2,y_2),(0, 255, 0), 2)
                     roi = image[y_1:y_2, x_1:x_2]
                     try:
                         roi = cv2.resize(roi, (224, 224))
                         if EVENT["EVENT"]:
 
+                            # Saving the image
                             if num_frames%5 == 0:
                                 cv2.imwrite(filename=f"{DIR}/dataset/{NUM}/image"+
                                 str(int(num_frames/5))+".jpg",img = roi )
                                 print(f"image_{int(num_frames/5)}.jpg saved")
 
+                            # Termination Condition
                             if num_frames == 5*IMAGE_NUM+1:
                                 camera.release()
                                 cv2.destroyAllWindows()
                                 break
 
                             num_frames += 1
-                        
-                        # roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+
                         cv2.imshow('Hand', cv2.flip(roi, 1))
                         _ = cv2.waitKey(1)
-                    except Exception as exp:
+                    except SystemExit:
                         continue
-                        # raise Exception("Error in resizing") from exp
 
     except KeyboardInterrupt:
         print("\n\n[INFO] exiting...")
@@ -174,6 +143,7 @@ def wait_response():
     global NUM
     while not EVENT["EVENT"]:
         try:
+            # Waiting for the user to press a key.
             time.sleep(2)
             print("[INFO] starting in 5 seconds... Press 'ctrl+c' to quit")
             time.sleep(5)
@@ -188,17 +158,20 @@ def wait_response():
             sys.exit()
 
 if __name__ == "__main__":
+
+    # Thread for the camera
     p1 = Process(target=run_camera)
     p1.start()
+    # Thread for the wait_response
     p2 = Process(target=wait_response)
     p2.start()
     try:
         p1.join()
-    except:
+    except SystemExit:
         pass
     try:
         p2.join()
-    except:
+    except SystemExit:
         pass
 
 # EOL

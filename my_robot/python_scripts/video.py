@@ -19,13 +19,17 @@ def live():
         model_complexity=0,
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5) as hands:
+
+        display_height = 128
+        display_width = 128
+
         while cap.isOpened():
             success, image = cap.read()
-            h, w, _ = image.shape
+            _h, _w, _ = image.shape
             x_max = 0
             y_max = 0
-            x_min = h
-            y_min = w
+            x_min = _h
+            y_min = _w
             res = "stop"
             if not success:
                 print("Ignoring empty camera frame.")
@@ -44,8 +48,8 @@ def live():
             if results.multi_hand_landmarks:
                 for hand_landmarks in results.multi_hand_landmarks:
                     for landmark in hand_landmarks.landmark:
-                        x = int(landmark.x * w)
-                        y = int(landmark.y * h)
+                        x = int(landmark.x * _w)
+                        y = int(landmark.y * _h)
                         if x > x_max:
                             x_max = x
                         if y > y_max:
@@ -62,13 +66,14 @@ def live():
                 cv2.rectangle(image,(x_1,y_1),(x_2,y_2),(0, 255, 0), 2)
                 roi = image[y_1:y_2, x_1:x_2]
                 try:
-                    roi = cv2.resize(roi, (128, 128))
+                    roi = cv2.resize(roi, (display_height, display_width))
                     # roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
                     cv2.imshow('Hand', cv2.flip(roi, 1))
 
                     res = predict(roi)
 
-                except:
+                except Exception as _e:
+                    print(_e)
                     continue
                         # return
             open("movement", 'w', encoding="utf-8").write(str(res))

@@ -1,17 +1,10 @@
 """
 Helper function to create a model with a single layer.
 """
-import sys
 import random
 import numpy as np
 import tensorflow.keras.backend as K
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-
-sys.path.append('../')
-
-# from assets.utils import *
-
-# metrics
 
 def eucledian_distance(_x, _y):
     """
@@ -62,6 +55,7 @@ class Pair():
         pairs = list()
         labels = list()
 
+        # Iterating and creating positive pairs and negative pairs
         for idx1,_ in enumerate(_x):
             x_1 = _x[idx1]
             label1 = _y[idx1]
@@ -78,6 +72,7 @@ class Pair():
             idx2 = random.choice(digit_indices[label2])
             x_2 = _x[idx2]
 
+            # Generate negative pair labels for the same
             labels += list([0])
             pairs += [[x_1, x_2]]
 
