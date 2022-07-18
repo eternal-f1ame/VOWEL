@@ -8,10 +8,7 @@ from model.create_model import get_model
 from data.dataset_generator import generate_data_for_classifier
 from tensorflow.keras.callbacks import CSVLogger
 
-
-CONFIG_FILE = 'configurations.json'
-
-with open(CONFIG_FILE, encoding="utf-8") as load_value:
+with open('configurations.json', encoding="utf-8") as load_value:
     configurations = json.load(load_value)
 
 with open(configurations["MODEL_DIR"] +
@@ -21,6 +18,9 @@ with open(configurations["MODEL_DIR"] +
 with open(configurations["DATA_DIR"] +
 "/" + "augment.json", encoding="utf-8") as aug:
     aug_config = json.load(aug)
+
+with open ('data/class_num', encoding="utf-8") as class_num:
+    class_num = int(json.load(class_num))
 
 def main(_args):
     """
@@ -39,7 +39,7 @@ def main(_args):
     model = get_model(
         model_config["base_architecture"],
         model_type=model_config["model_type"],
-        num_classes=6,
+        num_classes=class_num,
         config=model_config
     )
 
@@ -63,24 +63,24 @@ def main(_args):
     )
 
     # Defining the Keras TensorBoard callback.
-    logdir = "logs/log/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+    logdir = "logs/" + datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(
         log_dir=logdir
     )
 
     # Defining the CSVLogger History
     csv_log = CSVLogger(
-        "logs/history/training"+"_"+
+        "history/training"+"_"+
         model_config['base_architecture']+"_"+
         model_config["model_type"] +"_"+
         model_config["loss"] +"_"+
         model_config["optimizer"] +"_"+
-        f"{model_config['']}"+
+        str(model_config['embedding_size'])+
         ".log"
     )
 
     # Training the model
-    with tf.device("/gpu:0"):
+    with tf.device("/cpu:0"):
 
         model.fit(
             data,

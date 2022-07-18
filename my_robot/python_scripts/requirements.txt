@@ -8,3 +8,5 @@ absl-py
 tensorflow_addons
 rospy
 mediapipe
+pyyaml
+rospkg

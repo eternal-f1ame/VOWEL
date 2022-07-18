@@ -8,7 +8,7 @@ import tensorflow.keras.backend as K
 from tensorflow.keras.layers import Input, Dense, Flatten, Lambda, Dropout
 from tensorflow.keras.models import Model
 sys.path.append("../")
-from helpers import euclidean_distance, eucldian_output_shape
+from model.helpers import eucledian_distance, eucledian_output_shape
 
 def get_base(base_architecture, config, input_tensor, is_trainable=True):
     """
@@ -103,8 +103,8 @@ def get_model(base_architecture, model_type, num_classes, config):
         embedding_2 = embedding(input_2)
 
         distance = Lambda(
-            euclidean_distance,
-            output_shape=eucldian_output_shape)(embedding_1, embedding_2)
+            eucledian_distance,
+            output_shape=eucledian_output_shape)(embedding_1, embedding_2)
 
         model = Model([input_1, input_2], distance)
 
