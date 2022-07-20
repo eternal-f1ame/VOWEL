@@ -44,10 +44,7 @@
 
 ### Steps to Run the setup
 
-* Clone and Fetch the Gesture Recognition repository to the folder <code>/catkin_ws/src</code>
-
-* Pull the my_robot folder out of the Gesture_Recognition folder directly into the src.
-
+* Clone and Fetch the Gesture Recognition repository to the folder <code>/catkin_ws/src</code> as my_robot
 * Delete the <code>cmakelists</code> and <code>package.xml</code> from the my_robot folder.
 * Open the terminal and Navigate to <code>/catkin_ws/src</code> and then enter
 ```
