@@ -51,6 +51,12 @@ def get_base(base_architecture, config, input_tensor, is_trainable=True):
             input_shape=(config["HEIGHT"], config["WIDTH"], 3),
         )
 
+    elif base_architecture == 'mobilenet':
+        base_model = applications.MobileNet(
+            weights='imagenet', 
+            include_top=False, 
+            input_shape=(config["HEIGHT"], config["WIDTH"], 3),
+        )
     # Freezing the layers of choice (Editable by the user)
     out = base_model(input_tensor)
     out.trainable = is_trainable

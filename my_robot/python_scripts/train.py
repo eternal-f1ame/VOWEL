@@ -63,14 +63,14 @@ def main(_args):
     )
 
     # Defining the Keras TensorBoard callback.
-    logdir = "logs/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+    logdir = "../logs/" + datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(
         log_dir=logdir
     )
 
     # Defining the CSVLogger History
     csv_log = CSVLogger(
-        "history/training"+"_"+
+        "../history/training"+"_"+
         model_config['base_architecture']+"_"+
         model_config["model_type"] +"_"+
         model_config["loss"] +"_"+
