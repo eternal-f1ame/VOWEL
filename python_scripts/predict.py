@@ -25,7 +25,7 @@ model = get_model(
 )
 
 model.load_weights(
-    'model/weights/mobilenetclassifier_categorical_crossentropy_rmsprop_2022-07-18 20:18:20.048208_model-2-_0.0970.h5'
+    'model/weights/mobilenetclassifier_categorical_crossentropy_rmsprop_2022-07-20 19:21:12.243094_model-9-_0.0224.h5'
     )
 
 _height = model_config["HEIGHT"]
@@ -40,12 +40,11 @@ def predict(image):
 
     # Defining the Key value pairs for the model
     dictionary = {
-        '[[1. 0. 0. 0. 0. 0.]]':"front",
-        '[[0. 1. 0. 0. 0. 0.]]':"back",
-        '[[0. 0. 1. 0. 0. 0.]]':"left",
-        '[[0. 0. 0. 1. 0. 0.]]':"right",
-        '[[0. 0. 0. 0. 1. 0.]]':"stop",
-        '[[0. 0. 0. 0. 0. 1.]]':"cross"
+        '[[1. 0. 0. 0. 0.]]':"front",
+        '[[0. 1. 0. 0. 0.]]':"back",
+        '[[0. 0. 1. 0. 0.]]':"left",
+        '[[0. 0. 0. 1. 0.]]':"right",
+        '[[0. 0. 0. 0. 1.]]':"stop",
         }
 
     # Reshaping the image to the required shape and for display purposes
@@ -54,6 +53,7 @@ def predict(image):
 
     # Rounding off the result to get the key value pair
     key = str(res.round())
+    print(key)
     keys = dictionary.keys()
 
     # Checking if the key is in the dictionary

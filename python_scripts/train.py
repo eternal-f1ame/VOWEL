@@ -80,7 +80,7 @@ def main(_args):
     )
 
     # Training the model
-    with tf.device("/cpu:0"):
+    with tf.device("/gpu:0"):
 
         model.fit(
             data,
