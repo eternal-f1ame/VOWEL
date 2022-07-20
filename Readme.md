@@ -126,4 +126,4 @@
 * Steps
     > Navigate to ```catkin_ws/src/my_robot/python_scripts/robot.py```
 
-* Values of variables named SPEED, ANGULAR_SPEED, DIST, ANGLE cna be changed to change the respective selfexplanatory movements per prediction frame
+* Values of variables named SPEED, ANGULAR_SPEED, DIST, ANGLE can be changed to change the respective self explanatory movements per prediction frame
