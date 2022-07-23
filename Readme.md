@@ -90,7 +90,7 @@
 
     > navigate to the python_scripts folder in your terminal
 
-      cd catkin_ws/src/python_scripts
+      cd catkin_ws/src/gesture_bot/python_scripts
     > Train the model
 
       python train.py
