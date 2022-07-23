@@ -1,16 +1,16 @@
 <launch>
-  <arg name="model" default="$(find my_robot)/my_urdfs/publish_robot.urdf.xacro"/>
+  <arg name="model" default="$(find gesture_bot)/urdf/publish_robot.urdf.xacro"/>
 
 
-  <include file="$(find my_robot)/my_launch/01_launch.launch">
+  <include file="$(find gesture_bot)/launch/01_launch.launch">
     <arg name="model" value="$(arg model)" />
   </include>
 
   <rosparam command="load"
-            file="$(find my_robot)/my_config/joints.yaml"
+            file="$(find gesture_bot)/config/joints.yaml"
             ns="rover_joint_state_controller" />
   <rosparam command="load"
-            file="$(find my_robot)/my_config/cylins.yaml"
+            file="$(find gesture_bot)/config/cylins.yaml"
             ns="rover_head_controller" />
 
   <node name="rover_controller_spawner" pkg="controller_manager" type="spawner"
