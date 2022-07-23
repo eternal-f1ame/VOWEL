@@ -126,3 +126,7 @@
     > Navigate to ```catkin_ws/src/gesture_bot/python_scripts/robot.py```
 
 * Values of variables named SPEED, ANGULAR_SPEED, DIST, ANGLE can be changed to change the respective self explanatory movements per prediction frame
+
+### Lidar SLAM andother utilities
+
+* Coming soon
