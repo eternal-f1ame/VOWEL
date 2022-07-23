@@ -46,4 +46,7 @@ if __name__ == '__main__':
     except rospy.ROSInterruptException:
         sys.exit()
 
+    except KeyboardInterrupt:
+        sys.exit()
+
 # EOL
