@@ -18,13 +18,14 @@
 
 ## Simulation Packages
 
+* Gazebo
+
+      sudo apt install gazebo
+
 * Ros Noetic
 
       sudo apt install ros-noetic-desktop-full
 
-* Gazebo
-
-      sudo apt install gazebo
 
 ### ROS Installation
 
@@ -32,15 +33,13 @@
 
 ### Steps to Run the setup
 
-* Clone and Fetch the Gesture Recognition repository to the folder ```/catkin_ws/src``` as ```my_robot```
-    > Delete the ```cmakelists``` and ```package.xml``` from the my_robot folder.
+* Clone and Fetch the Gesture Recognition repository to the folder ```/catkin_ws/src/``` as ```gesture_bot```
+    > Open the terminal and Navigate to ```/catkin_ws/src/``` 
 
-    > Open the terminal and Navigate to ```/catkin_ws/src``` 
-
-      cd catkin_ws/src/
+      cd catkin_ws/
     > and then enter
 
-      catkin make my_robot
+      catkin_make
 
 ## Python Packages
 
@@ -69,13 +68,13 @@
 
     > Navigate to the python_scripts folder in your terminal and install the provided dependencies
 
-      cd catkin_ws/src/my_robot/python_scripts/
+      cd catkin_ws/src/gesture_bot/python_scripts/
       pip install -r requirements.txt
 
     > To finally run the setup. Navigate to the ```/catkin_ws/src``` and then
 
       source devel/setup.bash
-      roslaunch my_robot drive.launch
+      roslaunch gesture_bot drive.launch
 
 ## Pipeline Operations
 
@@ -103,11 +102,11 @@
 
       cd catkin_ws
       source devel/setup.bash
-      roslaunch my_robot drive.launch
+      roslaunch gesture_bot drive.launch
 
     > Navigate to the python_scripts folder in a new terminal and enter
 
-      cd HOME/catkin_ws/src/my_robot/python_scripts
+      cd HOME/catkin_ws/src/gesture_bot/python_scripts
       python main.py
 
 * The robot and camera operations will initiallize and starting instruction messages will be provided in the terminal
@@ -124,6 +123,10 @@
 ### Changing the Hyperparameters of the Robot
 
 * Steps
-    > Navigate to ```catkin_ws/src/my_robot/python_scripts/robot.py```
+    > Navigate to ```catkin_ws/src/gesture_bot/python_scripts/robot.py```
 
 * Values of variables named SPEED, ANGULAR_SPEED, DIST, ANGLE can be changed to change the respective self explanatory movements per prediction frame
+
+### Lidar SLAM and other utilities
+
+* Coming soon
