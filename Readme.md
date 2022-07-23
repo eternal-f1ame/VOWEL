@@ -40,7 +40,7 @@
       cd catkin_ws/src/
     > and then enter
 
-      catkin make my_robot
+      catkin_make my_robot
 
 ## Python Packages
 
