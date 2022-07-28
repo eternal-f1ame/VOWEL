@@ -3,11 +3,9 @@
 
 ## Prerequisites
 
-### Operating System
+### Ubuntu Linux 20.04
 
-#### Ubuntu Linux 20.04
-
-### Text Editor: Visual Studio Code Community Version
+### Catkin Workspace
 
 ### Mininconda
 
