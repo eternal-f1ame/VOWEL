@@ -1,0 +1,4 @@
+<launch>
+    <node name="arm_joints" pkg="atom" type="joints_control.py" output="screen">
+    </node>
+</launch>

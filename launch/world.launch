@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+	<!-- Robot pose -->
+	<arg name="x" default="0"/>
+	<arg name="y" default="0"/>
+	<arg name="z" default="0"/>
+	<arg name="roll" default="0"/>
+	<arg name="pitch" default="0"/>
+	<arg name="yaw" default="0"/>
+	<arg name="robot_name" default="atom"/>
+
+	<!-- Launch other relevant files-->
+	<include file="$(find atom)/launch/robot_description.launch"/>
+
+	<!-- World File -->
+	<arg name="world_file" default="$(find atom)/worlds/empty.world"/>
+
+	<rosparam file="$(find atom)/config/arm_control.yaml" command="load"/>
+
+	<node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+	output="screen" ns="/seven_dof_arm" args="joint_state_controller
+					  joint1_position_controller
+					  joint2_position_controller
+					  joint3_position_controller
+					  joint4_position_controller
+					  joint5_position_controller
+					  joint6_position_controller
+					  joint7_position_controller
+					  base_velocity_controller"/>
+
+	<!-- Launch Gazebo World -->
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="use_sim_time" value="true"/>
+		<arg name="verbose" value="false"/>
+		<arg name="debug" value="false"/>
+		<arg name="gui" value="true" />
+		<arg name="world_name" value="$(arg world_file)"/>
+	</include>
+
+   
+  <!-- <node name="slam_gmapping" pkg="gmapping" type="slam_gmapping">
+    <remap from="/scan" to="/scan"/>
+    <param name="base_frame" value="chassis"/>
+  </node> -->
+
+  <!-- <node name="teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" output="screen">
+        <remap from="/cmd_vel" to="/seven_dof_arm/base_velocity_controller/cmd_vel"/>
+    </node> -->
+
+	<!-- Spawn My Robot -->
+	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+		args="-urdf -param robot_description -model atom
+			  -x $(arg x) -y $(arg y) -z $(arg z)
+			  -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)"/>
+
+	<!--launch rviz-->
+	<node name="rviz" pkg="rviz" type="rviz" respawn="false"
+		  args="-d $(find atom)/default.rviz"/>
+
+</launch>
