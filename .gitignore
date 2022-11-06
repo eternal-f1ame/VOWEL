@@ -1,4 +1,8 @@
 *.pyc
+.vscode
 *.jpeg
 *.png
 *.jpg
+logs/
+history/
+build/
