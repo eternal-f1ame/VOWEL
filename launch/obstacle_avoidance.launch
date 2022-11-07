@@ -1,0 +1,4 @@
+<launch>
+    <node name="obst_avoid" pkg="atom" type="obstacle_avoidance.py" output="screen">
+    </node>
+</launch>

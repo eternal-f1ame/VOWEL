@@ -1,0 +1,12 @@
+tensorflow==2.9.1
+sklearn
+pandas
+numpy
+imutils
+opencv-python
+absl-py
+tensorflow_addons
+rospy
+mediapipe
+pyyaml
+rospkg
