@@ -6,7 +6,6 @@ import cv2
 
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
-from imageai.Detection import VideoObjectDetection
 
 
 class CameraOne:
