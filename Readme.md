@@ -100,7 +100,7 @@
 
       cd catkin_ws
       source devel/setup.bash
-      roslaunch VOWEL world.launch
+      roslaunch atom world.launch
 
     > Navigate to the script folder in a new terminal and enter
 
